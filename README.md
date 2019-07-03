@@ -11,12 +11,12 @@ This project buiding on frameworks:
 
 ## Checklist
 
-  - [ ] Create network base on Architecture
+  - [x] Create network base on Architecture
     - [x] VPC: 10.15.0.0/16
     - [x] Subnet: 7 subnets (1 public subnet, 2 application subnets, 2 agent subnets, 2 private subnets)
     - [x] Router table: Internet > DevOps via Internet gateway, DevOps > Internet via NAT Gateway
     - [x] Gateway: Internet Gateway and NAT Gateway
-    - [ ] Security Group:
+    - [x] Security Group: Update inbound and outbound for all server
     - [x] EIP: only NAT gateway and NginX server have EIP
   - [ ] Create Instances will using as Architecture
   - [ ] Create script for auto install applications

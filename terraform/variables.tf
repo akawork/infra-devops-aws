@@ -1,7 +1,19 @@
 # Region variable
 variable "region" {
   description = "Region for the the system"
-  default     = "us-east-2"
+  default = "us-east-2"
+}
+
+# Define Availability Zone
+
+variable "az_1" {
+  default     = "us-east-2a"
+  description = "AZ for "
+}
+
+variable "az_2" {
+  default     = "us-east-2b"
+  description = "AZ for "
 }
 
 ######################################################
@@ -59,15 +71,23 @@ variable "agent2_subnet_cidr" {
 ######################################################
 
 # Common AMI template using for almost instances
-variable "ami" {
+variable "amis" {
+  type = "map"
   description = "Amazon Linux 2 AMI "
-  default     = "ami-0ebbf2179e615c338"
+  default = {
+    "us-east-1" = "ami-0ebbf2179e615c338"
+    "ap-southeast-1" = "ami-01f7527546b557442"
+  }
 }
 
 # AMI template using for create NAT Instance
-variable "ami_nat" {
-  description = "Amazon Linux 2 AMI "
-  default     = "ami-00d1f8201864cc10c"
+variable "amis_nat" {
+  type = "map"
+  description = "Amazon Linux AMI "
+  default = {
+    "us-east-1" = "ami-00d1f8201864cc10c"
+    "ap-southeast-1" = "ami-01514bb1776d5c018"
+  }
 }
 
 ######################################################
@@ -84,3 +104,50 @@ variable "internal_key_path" {
   default     = "../keypair/internal-key.pub"
 }
 
+######################################################
+##                      RDS                         ##
+######################################################
+
+## SonarQube
+
+variable "sonar_identifier" {
+  default     = "mydb-rds"
+  description = "Identifier for your DB"
+}
+
+variable "sonar_storage" {
+  default     = "10"
+  description = "Storage size in GB"
+}
+
+variable "sonar_engine" {
+  default     = "postgres"
+  description = "Engine type, example values mysql, postgres"
+}
+
+variable "sonar_engine_version" {
+  description = "Engine version"
+
+  default = {
+    mysql    = "5.7.21"
+    postgres = "9.6.8"
+  }
+}
+
+variable "sonar_instance_class" {
+  default     = "db.t2.micro"
+  description = "Instance class"
+}
+
+variable "sonar_db_name" {
+  default     = "sonarqube"
+  description = "db name"
+}
+
+variable "sonar_username" {
+  default     = "devops"
+  description = "User name"
+}
+
+variable "sonar_password" {
+  description = "password, provide through your ENV variables"

@@ -11,7 +11,7 @@ resource "aws_key_pair" "internal" {
 
 # Define webserver inside the public subnet
 resource "aws_instance" "bastion-server" {
-  ami           = var.ami
+  ami           = var.amis[var.region]
   instance_type = "t2.nano"
   key_name      = aws_key_pair.bastion.id
 
@@ -39,7 +39,7 @@ resource "aws_instance" "bastion-server" {
 
 # Define NAT Instance Server inside the public subnet
 resource "aws_instance" "nat_instance" {
-  ami           = var.ami_nat
+  ami           = var.amis_nat[var.region]
   instance_type = "t2.nano"
   key_name      = aws_key_pair.internal.id
 
@@ -59,7 +59,7 @@ resource "aws_instance" "nat_instance" {
 
 # Define NAT Instance Server inside the public subnet
 resource "aws_instance" "squid" {
-  ami           = var.ami
+  ami           = var.amis[var.region]
   instance_type = "t2.nano"
   key_name      = aws_key_pair.internal.id
 
@@ -79,7 +79,7 @@ resource "aws_instance" "squid" {
 
 # Define NginX Server inside the public subnet
 resource "aws_instance" "nginx" {
-  ami           = var.ami
+  ami           = var.amis[var.region]
   instance_type = "t2.micro"
   key_name      = aws_key_pair.internal.id
 
@@ -100,7 +100,7 @@ resource "aws_instance" "nginx" {
 
 # Define Nexus Server inside the private subnet
 resource "aws_instance" "nexus" {
-  ami           = var.ami
+  ami           = var.amis[var.region]
   instance_type = "t2.micro"
   key_name      = aws_key_pair.internal.id
 
@@ -122,7 +122,7 @@ resource "aws_instance" "nexus" {
 
 # Define Sonarqube Server inside the private subnet
 resource "aws_instance" "sonarqube" {
-  ami           = var.ami
+  ami           = var.amis[var.region]
   instance_type = "t2.micro"
   key_name      = aws_key_pair.internal.id
 
@@ -144,7 +144,7 @@ resource "aws_instance" "sonarqube" {
 
 # Define Jenkins Server inside the private subnet
 resource "aws_instance" "jenkins" {
-  ami           = var.ami
+  ami           = var.amis[var.region]
   instance_type = "t2.micro"
   key_name      = aws_key_pair.internal.id
 
@@ -166,7 +166,7 @@ resource "aws_instance" "jenkins" {
 
 # Define Jira Server inside the private subnet
 resource "aws_instance" "jira" {
-  ami           = var.ami
+  ami           = var.amis[var.region]
   instance_type = "t2.micro"
   key_name      = aws_key_pair.internal.id
 
@@ -188,7 +188,7 @@ resource "aws_instance" "jira" {
 
 # Define Confluence Server inside the private subnet
 resource "aws_instance" "confluence" {
-  ami           = var.ami
+  ami           = var.amis[var.region]
   instance_type = "t2.micro"
   key_name      = aws_key_pair.internal.id
 
@@ -210,7 +210,7 @@ resource "aws_instance" "confluence" {
 
 # Define GitLab Server inside the private subnet
 resource "aws_instance" "gitlab" {
-  ami           = var.ami
+  ami           = var.amis[var.region]
   instance_type = "t2.micro"
   key_name      = aws_key_pair.internal.id
 
@@ -232,7 +232,7 @@ resource "aws_instance" "gitlab" {
 
 # Define Grafana Server inside the private subnet
 resource "aws_instance" "grafana" {
-  ami           = var.ami
+  ami           = var.amis[var.region]
   instance_type = "t2.micro"
   key_name      = aws_key_pair.internal.id
 
@@ -254,7 +254,7 @@ resource "aws_instance" "grafana" {
 
 # Define Zabbix Server inside the private subnet
 resource "aws_instance" "zabbix" {
-  ami           = var.ami
+  ami           = var.amis[var.region]
   instance_type = "t2.micro"
   key_name      = aws_key_pair.internal.id
 
@@ -276,7 +276,7 @@ resource "aws_instance" "zabbix" {
 
 # Define OpenLDAP Server inside the private subnet
 resource "aws_instance" "openldap" {
-  ami           = var.ami
+  ami           = var.amis[var.region]
   instance_type = "t2.micro"
   key_name      = aws_key_pair.internal.id
 

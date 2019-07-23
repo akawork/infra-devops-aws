@@ -3,15 +3,15 @@
 **/
 
 provider "aws" {
-  version = "~> 2.13"
+  version                 = "~> 2.13"
   shared_credentials_file = "~/.aws/credentials"
-  profile = "default"
-  region     = "${var.region}"
+  profile                 = "default"
+  region                  = var.region
 }
 
 # Define our VPC
 resource "aws_vpc" "devops" {
-  cidr_block           = "${var.vpc_cidr}"
+  cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
 
   tags = {

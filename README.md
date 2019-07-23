@@ -5,9 +5,13 @@ This project buiding on frameworks:
 2. Ansible
 
 ## Contents
-  1.  [Architecture](#Architecture)
+  1.  [Precondition](#Precondition)
 
-      1.1. [Architecture for Hybrid DevOps System](#Architecture-for-Hybrid-DevOps-System)
+      1.1. [Setup AWS authentication](#Setup-AWS-authentication)
+
+  2.  [Architecture](#Architecture)
+
+      2.1. [Architecture for Hybrid DevOps System](#Architecture-for-Hybrid-DevOps-System)
 
 ## Checklist
 
@@ -31,6 +35,23 @@ This project buiding on frameworks:
     - [ ] Nexus Repository
     - [ ] OpenLdap
   - [ ] Lambda function for auto turn-on and turn-off AWS Instances
+
+## Precondition
+
+### Setup AWS authentication
+
+Create or edit file `~/.aws/credentials` file and add below content to that file:
+
+```
+[default]
+aws_access_key_id = aaaaaa
+aws_secret_access_key = bbbbbbb
+```
+
+with 
+ - `default` is default profile. Terraform default using this profile for creating infrastructure on AWS
+ - `aaaaaa` is access key
+ - `bbbbbbb` is secret access key
 
 ## Architecture
 

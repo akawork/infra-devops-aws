@@ -1,6 +1,6 @@
 # Define EIP for NAT gateway
 resource "aws_eip" "nat" {
-  vpc      = true
+  vpc = true
 
   tags = {
     Name = "DevOps NAT Gateway IP"
@@ -9,7 +9,7 @@ resource "aws_eip" "nat" {
 
 # Define EIP for NAT gateway
 resource "aws_eip" "nginx" {
-  vpc      = true
+  vpc = true
 
   tags = {
     Name = "DevOps NginX IP"
@@ -17,6 +17,6 @@ resource "aws_eip" "nginx" {
 }
 
 resource "aws_eip_association" "eip_assoc_nginx" {
-  instance_id   = "${aws_instance.nginx.id}"
-  allocation_id = "${aws_eip.nginx.id}"
+  instance_id   = aws_instance.nginx.id
+  allocation_id = aws_eip.nginx.id
 }

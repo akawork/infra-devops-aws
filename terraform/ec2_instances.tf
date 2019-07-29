@@ -20,6 +20,22 @@ resource "aws_instance" "bastion-server" {
     device_index         = 0
   }
 
+  # Copies the internal-key to /home/ec2-user
+  provisioner "file" {
+    source      = "../keypair/internal-key"
+    destination = "/home/ec2-user/internal-key"
+    connection {
+      user        = "ec2-user"
+      host        = self.public_ip
+      private_key = file(var.bastion_private_key_path)
+    }
+  }
+
+  # provisioner "local-exec" {
+  #   command = "chmod -R 400 internal-key"
+  #   interpreter = ["/bin/bash", "-c"]
+  # }
+
   # provisioner "local-exec" {
   #   command = "sudo su"
   # }
@@ -62,6 +78,7 @@ resource "aws_instance" "squid" {
   ami           = var.amis[var.region]
   instance_type = "t2.nano"
   key_name      = aws_key_pair.internal.id
+  user_data     = file("../scripts/install_squid.sh")
 
   network_interface {
     network_interface_id = aws_network_interface.squid.id
@@ -82,8 +99,8 @@ resource "aws_instance" "nginx" {
   ami           = var.amis[var.region]
   instance_type = "t2.micro"
   key_name      = aws_key_pair.internal.id
+  user_data     = file("../scripts/install_nginx.sh")
 
-  #  user_data = "${file("./scripts/install_nginx.sh")}"
   network_interface {
     network_interface_id = aws_network_interface.nginx.id
     device_index         = 0
@@ -95,6 +112,19 @@ resource "aws_instance" "nginx" {
 
   volume_tags = {
     Name = var.project_name != "" ? "${var.project_name}-NginX-Server" : "NginX-Server"
+  }
+  # Copies the nginx file to /etc/nginx.
+  provisioner "file" {
+    source      = "../configs/nginx"
+    destination = "/tmp"
+    connection {
+      user                = "ec2-user"
+      host                = aws_instance.nginx.private_ip
+      private_key         = file(var.internal_private_key_path)
+      bastion_host        = aws_instance.bastion-server.public_ip
+      bastion_host_key    = file(var.bastion_key_path)
+      bastion_private_key = file(var.bastion_private_key_path)
+    }
   }
 }
 
@@ -109,7 +139,7 @@ resource "aws_instance" "nexus" {
     device_index         = 0
   }
 
-  #  user_data = "${file("./scripts/install_nexus.sh")}"
+  # user_data = data.template_file.nexus_properties.rendered
 
   tags = {
     Name = var.project_name != "" ? "${var.project_name}-Nexus-Server" : "Nexus-Server"
@@ -124,7 +154,7 @@ resource "aws_instance" "nexus" {
 resource "aws_instance" "sonarqube" {
   depends_on    = ["aws_db_instance.sonarqube"]
   ami           = var.amis[var.region]
-  instance_type = "t2.micro"
+  instance_type = "t2.medium"
   key_name      = aws_key_pair.internal.id
 
   network_interface {
@@ -132,7 +162,7 @@ resource "aws_instance" "sonarqube" {
     device_index         = 0
   }
 
-  #  user_data = "${file("./scripts/install_sonar.sh")}"
+  user_data = data.template_file.sonar_properties.rendered
 
   tags = {
     Name = var.project_name != "" ? "${var.project_name}-Sonarqube-Server" : "Sonarqube-Server"
@@ -154,7 +184,7 @@ resource "aws_instance" "jenkins" {
     device_index         = 0
   }
 
-  #  user_data = "${file("./scripts/install_jenkins.sh")}"
+  user_data = file("../scripts/install_jenkins.sh")
 
   tags = {
     Name = var.project_name != "" ? "${var.project_name}-Jenkins-Server" : "Jenkins-Server"

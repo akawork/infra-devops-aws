@@ -19,12 +19,22 @@ variable "region" {
 
 variable "az_1" {
   default     = "us-east-2a"
-  description = "AZ for "
+  description = "First Availability Zone"
 }
 
 variable "az_2" {
   default     = "us-east-2b"
-  description = "AZ for "
+  description = "Second Availability Zone"
+}
+
+variable "domain_name" {
+  default     = "demo.akawork.io."
+  description = "Your domain name"
+}
+
+variable "project_namespace" {
+  default     = "DevOps"
+  description = "Your Project Namespace"
 }
 
 ######################################################
@@ -86,7 +96,10 @@ variable "amis" {
   type        = "map"
   description = "Amazon Linux 2 AMI "
   default = {
+    "us-east-1"      = "ami-0b898040803850657"
     "us-east-2"      = "ami-0ebbf2179e615c338"
+    "us-west-1"      = "ami-056ee704806822732"
+    "us-west-2"      = "ami-082b5a644766e0e6f"
     "ap-southeast-1" = "ami-01f7527546b557442"
   }
 }
@@ -96,7 +109,10 @@ variable "amis_nat" {
   type        = "map"
   description = "Amazon Linux AMI "
   default = {
+    "us-east-1"      = "ami-00a9d4a05375b2763"
     "us-east-2"      = "ami-00d1f8201864cc10c"
+    "us-west-1"      = "ami-097ad469381034fa2"
+    "us-west-2"      = "ami-0b840e8a1ce4cdf15"
     "ap-southeast-1" = "ami-01514bb1776d5c018"
   }
 }
@@ -113,6 +129,16 @@ variable "bastion_key_path" {
 variable "internal_key_path" {
   description = "SSH Public Key path"
   default     = "../keypair/internal-key.pub"
+}
+
+variable "bastion_private_key_path" {
+  description = "SSH Private Key path"
+  default     = "../keypair/bastion-key"
+}
+
+variable "internal_private_key_path" {
+  description = "SSH Private Key path"
+  default     = "../keypair/internal-key"
 }
 
 ######################################################
@@ -152,7 +178,7 @@ variable "sonar_instance_class" {
 
 variable "sonar_db_name" {
   default     = "sonarqube"
-  description = "db name"
+  description = "Database name"
 }
 
 variable "sonar_username" {
@@ -162,4 +188,5 @@ variable "sonar_username" {
 
 variable "sonar_password" {
   description = "Please enter password for SonarQube DB"
+  default = "DevOps365"
 }

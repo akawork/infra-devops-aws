@@ -35,7 +35,7 @@ resource "aws_security_group" "sgbastion" {
       var.agent1_subnet_cidr,
       var.agent2_subnet_cidr,
     ]
-    description = "Allow SSH resonse from Another Server in VPC to Bastion server"
+    description = "Allow SSH response from Another Server in VPC to Bastion server"
   }
 
   egress {
@@ -57,7 +57,7 @@ resource "aws_security_group" "sgbastion" {
     to_port     = 65535
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-    description = "Allow SSH resonse from Bastion Server to another server"
+    description = "Allow SSH response from Bastion Server to another server"
   }
 }
 
@@ -116,7 +116,7 @@ resource "aws_security_group" "sgnat" {
       var.agent2_subnet_cidr,
       "${aws_instance.bastion-server.private_ip}/32",
     ]
-    description = "Allow resonse port from NAT Server to another server"
+    description = "Allow response port from NAT Server to another server"
   }
 }
 
@@ -159,7 +159,7 @@ resource "aws_security_group" "sgnginx" {
       var.application1_subnet_cidr,
       var.application2_subnet_cidr,
     ]
-    description = "Allow resonse from another server to NginX Server"
+    description = "Allow response from another server to NginX Server"
   }
 
   egress {
@@ -170,15 +170,15 @@ resource "aws_security_group" "sgnginx" {
       var.application1_subnet_cidr,
       var.application2_subnet_cidr,
     ]
-    description = "Allow SSH resonse from Bastion Server to another server"
+    description = "Allow SSH response from Bastion Server to another server"
   }
 
   egress {
-    from_port   = 32768
+    from_port   = 0
     to_port     = 65535
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-    description = "Allow resonse from NginX Server to another server"
+    description = "Allow response from NginX Server to another server"
   }
 }
 
@@ -232,7 +232,7 @@ resource "aws_security_group" "sgsquid" {
     to_port     = 65535
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-    description = "Allow resonse from another server to NginX Server"
+    description = "Allow response from another server to NginX Server"
   }
 
   egress {
@@ -240,7 +240,7 @@ resource "aws_security_group" "sgsquid" {
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-    description = "Allow SSH resonse from Bastion Server to another server"
+    description = "Allow SSH response from Bastion Server to another server"
   }
 
   egress {
@@ -248,7 +248,7 @@ resource "aws_security_group" "sgsquid" {
     to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-    description = "Allow SSH resonse from Bastion Server to another server"
+    description = "Allow SSH response from Bastion Server to another server"
   }
 
   egress {
@@ -263,7 +263,15 @@ resource "aws_security_group" "sgsquid" {
       var.agent2_subnet_cidr,
       "${aws_instance.bastion-server.private_ip}/32",
     ]
-    description = "Allow resonse from Server to another server"
+    description = "Allow response from Server to another server"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Used to download packages"
   }
 }
 
@@ -299,7 +307,15 @@ resource "aws_security_group" "sgnexus" {
       "${aws_instance.nginx.private_ip}/32",
       "${aws_instance.bastion-server.private_ip}/32",
     ]
-    description = "Allow resonse port from Nexus Server to another server"
+    description = "Allow response port from Nexus Server to another server"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Used to download packages"
   }
 }
 
@@ -314,8 +330,8 @@ resource "aws_security_group" "sgsonar" {
   }
 
   ingress {
-    from_port   = 8080
-    to_port     = 8080
+    from_port   = 9000
+    to_port     = 9000
     protocol    = "tcp"
     cidr_blocks = ["${aws_instance.nginx.private_ip}/32"]
   }
@@ -335,7 +351,7 @@ resource "aws_security_group" "sgsonar" {
       "${aws_instance.nginx.private_ip}/32",
       "${aws_instance.bastion-server.private_ip}/32",
     ]
-    description = "Allow resonse port from Nexus Server to another server"
+    description = "Allow response port from Nexus Server to another server"
   }
 
   egress {
@@ -346,7 +362,15 @@ resource "aws_security_group" "sgsonar" {
       var.private1_subnet_cidr,
       var.private2_subnet_cidr,
     ]
-    description = "Allow resonse port from Nexus Server to another server"
+    description = "Allow response port from Nexus Server to another server"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Used to download packages"
   }
 }
 
@@ -382,7 +406,14 @@ resource "aws_security_group" "sgjenkins" {
       "${aws_instance.nginx.private_ip}/32",
       "${aws_instance.bastion-server.private_ip}/32",
     ]
-    description = "Allow resonse port from Nexus Server to another server"
+    description = "Allow response port from Nexus Server to another server"
+  }
+  egress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Used to download packages"
   }
 }
 
@@ -418,7 +449,7 @@ resource "aws_security_group" "sggitlab" {
       "${aws_instance.nginx.private_ip}/32",
       "${aws_instance.bastion-server.private_ip}/32",
     ]
-    description = "Allow resonse port from Nexus Server to another server"
+    description = "Allow response port from Nexus Server to another server"
   }
 
   egress {
@@ -429,7 +460,15 @@ resource "aws_security_group" "sggitlab" {
       var.private1_subnet_cidr,
       var.private2_subnet_cidr,
     ]
-    description = "Allow resonse port from Nexus Server to another server"
+    description = "Allow response port from Nexus Server to another server"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Used to download packages"
   }
 }
 
@@ -465,7 +504,7 @@ resource "aws_security_group" "sgjira" {
       "${aws_instance.nginx.private_ip}/32",
       "${aws_instance.bastion-server.private_ip}/32",
     ]
-    description = "Allow resonse port from Nexus Server to another server"
+    description = "Allow response port from Nexus Server to another server"
   }
 
   egress {
@@ -476,7 +515,15 @@ resource "aws_security_group" "sgjira" {
       var.private1_subnet_cidr,
       var.private2_subnet_cidr,
     ]
-    description = "Allow resonse port from Nexus Server to another server"
+    description = "Allow response port from Nexus Server to another server"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Used to download packages"
   }
 }
 
@@ -512,7 +559,7 @@ resource "aws_security_group" "sgconfluence" {
       "${aws_instance.nginx.private_ip}/32",
       "${aws_instance.bastion-server.private_ip}/32",
     ]
-    description = "Allow resonse port from Nexus Server to another server"
+    description = "Allow response port from Nexus Server to another server"
   }
 
   egress {
@@ -523,7 +570,15 @@ resource "aws_security_group" "sgconfluence" {
       var.private1_subnet_cidr,
       var.private2_subnet_cidr,
     ]
-    description = "Allow resonse port from Nexus Server to another server"
+    description = "Allow response port from Nexus Server to another server"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Used to download packages"
   }
 }
 
@@ -559,7 +614,15 @@ resource "aws_security_group" "sgopenldap" {
       "${aws_instance.nginx.private_ip}/32",
       "${aws_instance.bastion-server.private_ip}/32",
     ]
-    description = "Allow resonse port from Nexus Server to another server"
+    description = "Allow response port from Nexus Server to another server"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Used to download packages"
   }
 }
 
@@ -595,7 +658,15 @@ resource "aws_security_group" "sggrafana" {
       "${aws_instance.nginx.private_ip}/32",
       "${aws_instance.bastion-server.private_ip}/32",
     ]
-    description = "Allow resonse port from Grafana Server to another server"
+    description = "Allow response port from Grafana Server to another server"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Used to download packages"
   }
 }
 
@@ -631,7 +702,15 @@ resource "aws_security_group" "sgzabbix" {
       "${aws_instance.nginx.private_ip}/32",
       "${aws_instance.bastion-server.private_ip}/32",
     ]
-    description = "Allow resonse port from Zabbix Server to another server"
+    description = "Allow response port from Zabbix Server to another server"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Used to download packages"
   }
 }
 

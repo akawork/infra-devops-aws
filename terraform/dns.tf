@@ -1,0 +1,36 @@
+data "aws_route53_zone" "akawork" {
+  name         = var.domain_name
+  private_zone = false
+}
+
+resource "aws_route53_record" "jenkins" {
+  zone_id = data.aws_route53_zone.akawork.zone_id
+  name    = "jenkins.${data.aws_route53_zone.akawork.name}"
+  type    = "A"
+  ttl     = "300"
+  records = [aws_eip.nginx.public_ip]
+}
+
+resource "aws_route53_record" "sonar" {
+  zone_id = data.aws_route53_zone.akawork.zone_id
+  name    = "sonar.${data.aws_route53_zone.akawork.name}"
+  type    = "A"
+  ttl     = "300"
+  records = [aws_eip.nginx.public_ip]
+}
+
+resource "aws_route53_record" "nexus" {
+  zone_id = data.aws_route53_zone.akawork.zone_id
+  name    = "nexus.${data.aws_route53_zone.akawork.name}"
+  type    = "A"
+  ttl     = "300"
+  records = [aws_eip.nginx.public_ip]
+}
+
+resource "aws_route53_record" "gitlab" {
+  zone_id = data.aws_route53_zone.akawork.zone_id
+  name    = "gitlab.${data.aws_route53_zone.akawork.name}"
+  type    = "A"
+  ttl     = "300"
+  records = [aws_eip.nginx.public_ip]
+}

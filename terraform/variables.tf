@@ -75,7 +75,7 @@ variable "amis" {
   type = "map"
   description = "Amazon Linux 2 AMI "
   default = {
-    "us-east-1" = "ami-0ebbf2179e615c338"
+    "us-east-2" = "ami-0ebbf2179e615c338"
     "ap-southeast-1" = "ami-01f7527546b557442"
   }
 }
@@ -85,7 +85,7 @@ variable "amis_nat" {
   type = "map"
   description = "Amazon Linux AMI "
   default = {
-    "us-east-1" = "ami-00d1f8201864cc10c"
+    "us-east-2" = "ami-00d1f8201864cc10c"
     "ap-southeast-1" = "ami-01514bb1776d5c018"
   }
 }
@@ -151,3 +151,4 @@ variable "sonar_username" {
 
 variable "sonar_password" {
   description = "password, provide through your ENV variables"
+}

@@ -8,7 +8,7 @@ resource "aws_route_table" "public-rt" {
   }
 
   tags = {
-    Name = "DevOps-Public-Router-Table"
+    Name = var.project_name != "" ? "${var.project_name}-Public-Router-Table" : "Public-Router-Table"
   }
 }
 
@@ -22,7 +22,7 @@ resource "aws_route_table" "nat-rt" {
   }
 
   tags = {
-    Name = "DevOps-NAT-Router-Table"
+    Name = var.project_name != "" ? "${var.project_name}-NAT-Router-Table" : "NAT-Router-Table"
   }
 }
 

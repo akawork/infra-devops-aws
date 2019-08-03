@@ -29,11 +29,11 @@ resource "aws_instance" "bastion-server" {
   # }
 
   tags = {
-    Name = "DevOps-Bastion-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Bastion-Server" : "Bastion-Server"
   }
 
   volume_tags = {
-    Name = "DevOps-Bastion-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Bastion-Server" : "Bastion-Server"
   }
 }
 
@@ -49,11 +49,11 @@ resource "aws_instance" "nat_instance" {
   }
 
   tags = {
-    Name = "DevOps-NAT-Server"
+    Name = var.project_name != "" ? "${var.project_name}-NAT-Server" : "NAT-Server"
   }
 
   volume_tags = {
-    Name = "DevOps-NAT-Server"
+    Name = var.project_name != "" ? "${var.project_name}-NAT-Server" : "NAT-Server"
   }
 }
 
@@ -69,11 +69,11 @@ resource "aws_instance" "squid" {
   }
 
   tags = {
-    Name = "DevOps-Squid-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Squid-Server" : "Squid-Server"
   }
 
   volume_tags = {
-    Name = "DevOps-Squid-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Squid-Server" : "Squid-Server"
   }
 }
 
@@ -90,11 +90,11 @@ resource "aws_instance" "nginx" {
   }
 
   tags = {
-    Name = "DevOps-NginX-Server"
+    Name = var.project_name != "" ? "${var.project_name}-NginX-Server" : "NginX-Server"
   }
 
   volume_tags = {
-    Name = "DevOps-NginX-Server"
+    Name = var.project_name != "" ? "${var.project_name}-NginX-Server" : "NginX-Server"
   }
 }
 
@@ -112,16 +112,17 @@ resource "aws_instance" "nexus" {
   #  user_data = "${file("./scripts/install_nexus.sh")}"
 
   tags = {
-    Name = "DevOps-Nexus-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Nexus-Server" : "Nexus-Server"
   }
 
   volume_tags = {
-    Name = "DevOps-Nexus-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Nexus-Server" : "Nexus-Server"
   }
 }
 
 # Define Sonarqube Server inside the private subnet
 resource "aws_instance" "sonarqube" {
+  depends_on    = ["aws_db_instance.sonarqube"]
   ami           = var.amis[var.region]
   instance_type = "t2.micro"
   key_name      = aws_key_pair.internal.id
@@ -134,11 +135,11 @@ resource "aws_instance" "sonarqube" {
   #  user_data = "${file("./scripts/install_sonar.sh")}"
 
   tags = {
-    Name = "DevOps-Sonarqube-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Sonarqube-Server" : "Sonarqube-Server"
   }
 
   volume_tags = {
-    Name = "DevOps-Sonarqube-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Sonarqube-Server" : "Sonarqube-Server"
   }
 }
 
@@ -156,11 +157,11 @@ resource "aws_instance" "jenkins" {
   #  user_data = "${file("./scripts/install_jenkins.sh")}"
 
   tags = {
-    Name = "DevOps-Jenkins-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Jenkins-Server" : "Jenkins-Server"
   }
 
   volume_tags = {
-    Name = "DevOps-Jenkins-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Jenkins-Server" : "Jenkins-Server"
   }
 }
 
@@ -178,11 +179,11 @@ resource "aws_instance" "jira" {
   #  user_data = "${file("./scripts/install_jira.sh")}"
 
   tags = {
-    Name = "DevOps-Jira-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Jira-Server" : "Jira-Server"
   }
 
   volume_tags = {
-    Name = "DevOps-Jira-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Jira-Server" : "Jira-Server"
   }
 }
 
@@ -200,11 +201,11 @@ resource "aws_instance" "confluence" {
   #  user_data = "${file("./scripts/install_confluence.sh")}  
 
   tags = {
-    Name = "DevOps-Confluence-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Confluence-Server" : "Confluence-Server"
   }
 
   volume_tags = {
-    Name = "DevOps-Confluence-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Confluence-Server" : "Confluence-Server"
   }
 }
 
@@ -222,11 +223,11 @@ resource "aws_instance" "gitlab" {
   #  user_data = "${file("./scripts/install_gitlab.sh")}"
 
   tags = {
-    Name = "DevOps-GitLab-Server"
+    Name = var.project_name != "" ? "${var.project_name}-GitLab-Server" : "GitLab-Server"
   }
 
   volume_tags = {
-    Name = "DevOps-GitLab-Server"
+    Name = var.project_name != "" ? "${var.project_name}-GitLab-Server" : "GitLab-Server"
   }
 }
 
@@ -244,11 +245,11 @@ resource "aws_instance" "grafana" {
   #  user_data = "${file("./scripts/install_grafana.sh")}"
 
   tags = {
-    Name = "DevOps-Grafana-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Grafana-Server" : "Grafana-Server"
   }
 
   volume_tags = {
-    Name = "DevOps-Grafana-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Grafana-Server" : "Grafana-Server"
   }
 }
 
@@ -266,11 +267,11 @@ resource "aws_instance" "zabbix" {
   #  user_data = "${file("./scripts/install_zabbix.sh")}"
 
   tags = {
-    Name = "DevOps-Zabbix-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Zabbix-Server" : "Zabbix-Server"
   }
 
   volume_tags = {
-    Name = "DevOps-Zabbix-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Zabbix-Server" : "Zabbix-Server"
   }
 }
 
@@ -288,10 +289,10 @@ resource "aws_instance" "openldap" {
   #  user_data = "${file("./scripts/install_openldap.sh")}"
 
   tags = {
-    Name = "DevOps-OpenLDAP-Server"
+    Name = var.project_name != "" ? "${var.project_name}-OpenLDAP-Server" : "OpenLDAP-Server"
   }
 
   volume_tags = {
-    Name = "DevOps-OpenLDAP-Server"
+    Name = var.project_name != "" ? "${var.project_name}-OpenLDAP-Server" : "OpenLDAP-Server"
   }
 }

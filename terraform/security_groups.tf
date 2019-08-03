@@ -1,11 +1,11 @@
 # Define the security group for public subnet
 resource "aws_security_group" "sgbastion" {
-  name        = "DevOps-Bastion-SG"
+  name        = var.project_name != "" ? "${var.project_name}-Bastion-SG" : "Bastion-SG"
   description = "Allow SSH access on Bastion Server"
   vpc_id      = aws_vpc.devops.id
 
   tags = {
-    Name = "DevOps-Bastion-Server-SG"
+    Name = var.project_name != "" ? "${var.project_name}-Bastion-Server-SG" : "Bastion-Server-SG"
   }
 
   ingress {
@@ -63,12 +63,12 @@ resource "aws_security_group" "sgbastion" {
 
 # Define the security group for NAT Instance
 resource "aws_security_group" "sgnat" {
-  name        = "DevOps-NAT-SG"
+  name        = var.project_name != "" ? "${var.project_name}-NAT-SG" : "NAT-SG"
   description = "Allow incoming HTTP/HTTPS connections & SSH access"
   vpc_id      = aws_vpc.devops.id
 
   tags = {
-    Name = "DevOps-NAT-Instance-SG"
+    Name = var.project_name != "" ? "${var.project_name}-NAT-Instance-SG" : "NAT-Instance-SG"
   }
 
   ingress {
@@ -122,12 +122,12 @@ resource "aws_security_group" "sgnat" {
 
 # Define the security group for NginX
 resource "aws_security_group" "sgnginx" {
-  name        = "DevOps-NginX-SG"
+  name        = var.project_name != "" ? "${var.project_name}-NginX-SG" : "NginX-SG"
   description = "Allow incoming HTTP connections & SSH access"
   vpc_id      = aws_vpc.devops.id
 
   tags = {
-    Name = "DevOps-NginX-Server-SG"
+    Name = var.project_name != "" ? "${var.project_name}-NginX-Server-SG" : "NginX-Server-SG"
   }
 
   ingress {
@@ -189,7 +189,7 @@ resource "aws_security_group" "sgsquid" {
   vpc_id      = aws_vpc.devops.id
 
   tags = {
-    Name = "DevOps-Squid-Server-SG"
+    Name = var.project_name != "" ? "${var.project_name}-Squid-Server-SG" : "Squid-Server-SG"
   }
 
   ingress {
@@ -269,12 +269,12 @@ resource "aws_security_group" "sgsquid" {
 
 # Define the security group for Nexus
 resource "aws_security_group" "sgnexus" {
-  name        = "DevOps-Nexus-SG"
+  name        = var.project_name != "" ? "${var.project_name}-Nexus-SG" : "Nexus-SG"
   description = "Allow incoming HTTP connections & SSH access"
   vpc_id      = aws_vpc.devops.id
 
   tags = {
-    Name = "DevOps-Nexus-Server-SG"
+    Name = var.project_name != "" ? "${var.project_name}-Nexus-Server-SG" : "Nexus-Server-SG"
   }
 
   ingress {
@@ -305,12 +305,12 @@ resource "aws_security_group" "sgnexus" {
 
 # Define the security group for Sonar
 resource "aws_security_group" "sgsonar" {
-  name        = "DevOps-Sonar-SG"
+  name        = var.project_name != "" ? "${var.project_name}-Sonar-SG" : "Sonar-SG"
   description = "Allow incoming HTTP connections & SSH access"
   vpc_id      = aws_vpc.devops.id
 
   tags = {
-    Name = "DevOps-Sonar-Server-SG"
+    Name = var.project_name != "" ? "${var.project_name}-Sonar-Server-SG" : "Sonar-Server-SG"
   }
 
   ingress {
@@ -352,12 +352,12 @@ resource "aws_security_group" "sgsonar" {
 
 # Define the security group for Jenkins
 resource "aws_security_group" "sgjenkins" {
-  name        = "DevOps-Jenkins-SG"
+  name        = var.project_name != "" ? "${var.project_name}-Jenkins-SG" : "Jenkins-SG"
   description = "Allow incoming HTTP connections & SSH access"
   vpc_id      = aws_vpc.devops.id
 
   tags = {
-    Name = "DevOps-Jenkins-Server-SG"
+    Name = var.project_name != "" ? "${var.project_name}-Jenkins-Server-SG" : "Jenkins-Server-SG"
   }
 
   ingress {
@@ -388,12 +388,12 @@ resource "aws_security_group" "sgjenkins" {
 
 # Define the security group for GitLab
 resource "aws_security_group" "sggitlab" {
-  name        = "DevOps-GitLab-SG"
+  name        = var.project_name != "" ? "${var.project_name}-GitLab-SG" : "GitLab-SG"
   description = "Allow incoming HTTP connections & SSH access"
   vpc_id      = aws_vpc.devops.id
 
   tags = {
-    Name = "DevOps-GitLab-Server-SG"
+    Name = var.project_name != "" ? "${var.project_name}-GitLab-Server-SG" : "GitLab-Server-SG"
   }
 
   ingress {
@@ -435,12 +435,12 @@ resource "aws_security_group" "sggitlab" {
 
 # Define the security group for Jira
 resource "aws_security_group" "sgjira" {
-  name        = "DevOps-Jira-SG"
+  name        = var.project_name != "" ? "${var.project_name}-Jira-SG" : "Jira-SG"
   description = "Allow incoming HTTP connections & SSH access"
   vpc_id      = aws_vpc.devops.id
 
   tags = {
-    Name = "DevOps-Jira-Server-SG"
+    Name = var.project_name != "" ? "${var.project_name}-Jira-Server-SG" : "Jira-Server-SG"
   }
 
   ingress {
@@ -487,7 +487,7 @@ resource "aws_security_group" "sgconfluence" {
   vpc_id      = aws_vpc.devops.id
 
   tags = {
-    Name = "DevOps-Confluence-Server-SG"
+    Name = var.project_name != "" ? "${var.project_name}-Confluence-Server-SG" : "Confluence-Server-SG"
   }
 
   ingress {
@@ -534,7 +534,7 @@ resource "aws_security_group" "sgopenldap" {
   vpc_id      = aws_vpc.devops.id
 
   tags = {
-    Name = "DevOps-OpenLDAP-Server-SG"
+    Name = var.project_name != "" ? "${var.project_name}-OpenLDAP-Server-SG" : "OpenLDAP-Server-SG"
   }
 
   ingress {
@@ -570,7 +570,7 @@ resource "aws_security_group" "sggrafana" {
   vpc_id      = aws_vpc.devops.id
 
   tags = {
-    Name = "DevOps-Grafana-Server-SG"
+    Name = var.project_name != "" ? "${var.project_name}-Grafana-Server-SG" : "Grafana-Server-SG"
   }
 
   ingress {
@@ -606,7 +606,7 @@ resource "aws_security_group" "sgzabbix" {
   vpc_id      = aws_vpc.devops.id
 
   tags = {
-    Name = "DevOps-Zabbix-Server-SG"
+    Name = var.project_name != "" ? "${var.project_name}-Zabbix-Server-SG" : "Zabbix-Server-SG"
   }
 
   ingress {
@@ -637,12 +637,12 @@ resource "aws_security_group" "sgzabbix" {
 
 # Define the security group for private subnet
 resource "aws_security_group" "sgdb" {
-  name        = "DevOps-DB-SG"
+  name        = var.project_name != "" ? "${var.project_name}-DB-SG" : "DB-SG"
   description = "Allow traffic from appplication subnet"
   vpc_id      = aws_vpc.devops.id
 
   tags = {
-    Name = "DevOps-DB-SG"
+    Name = var.project_name != "" ? "${var.project_name}-DB-SG" : "DB-SG"
   }
   ingress {
     from_port = 3306

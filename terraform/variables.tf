@@ -1,7 +1,18 @@
+######################################################
+##                      Project                     ##
+######################################################
+variable "project_name" {
+  description = "Project name here"
+  default     = "DevOps"
+}
+
+######################################################
+##                     Region                       ##
+######################################################
 # Region variable
 variable "region" {
   description = "Region for the the system"
-  default = "us-east-2"
+  default     = "us-east-2"
 }
 
 # Define Availability Zone
@@ -72,20 +83,20 @@ variable "agent2_subnet_cidr" {
 
 # Common AMI template using for almost instances
 variable "amis" {
-  type = "map"
+  type        = "map"
   description = "Amazon Linux 2 AMI "
   default = {
-    "us-east-2" = "ami-0ebbf2179e615c338"
+    "us-east-2"      = "ami-0ebbf2179e615c338"
     "ap-southeast-1" = "ami-01f7527546b557442"
   }
 }
 
 # AMI template using for create NAT Instance
 variable "amis_nat" {
-  type = "map"
+  type        = "map"
   description = "Amazon Linux AMI "
   default = {
-    "us-east-2" = "ami-00d1f8201864cc10c"
+    "us-east-2"      = "ami-00d1f8201864cc10c"
     "ap-southeast-1" = "ami-01514bb1776d5c018"
   }
 }
@@ -111,7 +122,7 @@ variable "internal_key_path" {
 ## SonarQube
 
 variable "sonar_identifier" {
-  default     = "mydb-rds"
+  default     = "sonarqube"
   description = "Identifier for your DB"
 }
 
@@ -145,10 +156,10 @@ variable "sonar_db_name" {
 }
 
 variable "sonar_username" {
-  default     = "devops"
+  default     = "sonarqube"
   description = "User name"
 }
 
 variable "sonar_password" {
-  description = "password, provide through your ENV variables"
+  description = "Please enter password for SonarQube DB"
 }

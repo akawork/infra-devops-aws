@@ -6,7 +6,7 @@ resource "aws_network_interface" "bastion" {
   source_dest_check = false
 
   tags = {
-    Name = "DevOps-Bastion-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Bastion-Server" : "Bastion-Server"
   }
 }
 
@@ -18,7 +18,7 @@ resource "aws_network_interface" "nginx" {
   source_dest_check = false
 
   tags = {
-    Name = "DevOps-Nginx-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Nginx-Server" : "Nginx-Server"
   }
 }
 
@@ -30,7 +30,7 @@ resource "aws_network_interface" "nat_instance" {
   source_dest_check = false
 
   tags = {
-    Name = "DevOps-NAT-Server"
+    Name = var.project_name != "" ? "${var.project_name}-NAT-Server" : "NAT-Server"
   }
 }
 
@@ -42,7 +42,7 @@ resource "aws_network_interface" "squid" {
   source_dest_check = false
 
   tags = {
-    Name = "DevOps-Squid-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Squid-Server" : "Squid-Server"
   }
 }
 
@@ -54,7 +54,7 @@ resource "aws_network_interface" "openldap" {
   source_dest_check = false
 
   tags = {
-    Name = "DevOps-OpenLDAP-Server"
+    Name = var.project_name != "" ? "${var.project_name}-OpenLDAP-Server" : "OpenLDAP-Server"
   }
 }
 
@@ -66,7 +66,7 @@ resource "aws_network_interface" "jira" {
   source_dest_check = false
 
   tags = {
-    Name = "DevOps-Jira-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Jira-Server" : "Jira-Server"
   }
 }
 
@@ -78,7 +78,7 @@ resource "aws_network_interface" "confluence" {
   source_dest_check = false
 
   tags = {
-    Name = "DevOps-Confluence-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Confluence-Server" : "Confluence-Server"
   }
 }
 
@@ -90,7 +90,7 @@ resource "aws_network_interface" "jenkins" {
   source_dest_check = false
 
   tags = {
-    Name = "DevOps-Jenkins-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Jenkins-Server" : "Jenkins-Server"
   }
 }
 
@@ -102,7 +102,7 @@ resource "aws_network_interface" "sonar" {
   source_dest_check = false
 
   tags = {
-    Name = "DevOps-Sonar-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Sonar-Server" : "Sonar-Server"
   }
 }
 
@@ -114,7 +114,7 @@ resource "aws_network_interface" "nexus" {
   source_dest_check = false
 
   tags = {
-    Name = "DevOps-Nexus-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Nexus-Server" : "Nexus-Server"
   }
 }
 
@@ -126,7 +126,7 @@ resource "aws_network_interface" "gitlab" {
   source_dest_check = false
 
   tags = {
-    Name = "DevOps-GitLab-Server"
+    Name = var.project_name != "" ? "${var.project_name}-GitLab-Server" : "GitLab-Server"
   }
 }
 
@@ -138,7 +138,7 @@ resource "aws_network_interface" "zabbix" {
   source_dest_check = false
 
   tags = {
-    Name = "DevOps-Zabbix-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Zabbix-Server" : "Zabbix-Server"
   }
 }
 
@@ -150,6 +150,6 @@ resource "aws_network_interface" "grafana" {
   source_dest_check = false
 
   tags = {
-    Name = "DevOps-Grafana-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Grafana-Server" : "Grafana-Server"
   }
 }

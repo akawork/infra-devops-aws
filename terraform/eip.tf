@@ -3,7 +3,7 @@ resource "aws_eip" "nat" {
   vpc = true
 
   tags = {
-    Name = "DevOps NAT Gateway IP"
+    Name = var.project_name != "" ? "${var.project_name}-NAT-Gateway-IP" : "NAT-Gateway-IP"
   }
 }
 
@@ -12,7 +12,7 @@ resource "aws_eip" "nginx" {
   vpc = true
 
   tags = {
-    Name = "DevOps NginX IP"
+    Name = var.project_name != "" ? "${var.project_name}-NginX-IP" : "NginX-IP"
   }
 }
 

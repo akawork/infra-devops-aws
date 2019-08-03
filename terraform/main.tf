@@ -15,6 +15,6 @@ resource "aws_vpc" "devops" {
   enable_dns_hostnames = true
 
   tags = {
-    Name = "DevOps-VPC"
+    Name = var.project_name != "" ? "${var.project_name}-VPC" : "VPC"
   }
 }

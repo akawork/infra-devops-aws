@@ -3,7 +3,7 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.devops.id
 
   tags = {
-    Name = "DevOps-IGW"
+    Name = var.project_name != "" ? "${var.project_name}-IGW" : "IGW"
   }
 }
 
@@ -13,6 +13,6 @@ resource "aws_nat_gateway" "natgw" {
   subnet_id     = aws_subnet.public-subnet.id
 
   tags = {
-    Name = "DevOps-NAT-GW"
+    Name = var.project_name != "" ? "${var.project_name}-NAT-GW" : "NAT-GW"
   }
 }

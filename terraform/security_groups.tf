@@ -286,8 +286,8 @@ resource "aws_security_group" "sgnexus" {
   }
 
   ingress {
-    from_port   = 8080
-    to_port     = 8080
+    from_port   = 8081
+    to_port     = 8081
     protocol    = "tcp"
     cidr_blocks = ["${aws_instance.nginx.private_ip}/32"]
   }

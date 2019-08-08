@@ -8,3 +8,6 @@
 # .tfvars files
 /terraform/*.tfvars
 /keypair/**
+
+# Nginx render files
+/configs/nginx/conf.render/**

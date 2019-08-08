@@ -21,8 +21,8 @@ function install_nginx {
 }
 
 function config_nginx {
-    sudo cp /tmp/nginx/nginx.conf /etc/nginx/nginx.conf
-    sudo cp /tmp/nginx/conf.d/*.conf /etc/nginx/conf.d
+    sudo mv /tmp/nginx.conf /etc/nginx/nginx.conf
+    sudo cp /tmp/*.conf /etc/nginx/conf.d
     sudo systemctl reload nginx
 }
 

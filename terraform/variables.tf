@@ -28,7 +28,7 @@ variable "az_2" {
 }
 
 variable "domain_name" {
-  default     = "demo.akawork.io."
+  default     = "demo.akawork.io"
   description = "Your domain name"
 }
 
@@ -190,3 +190,18 @@ variable "sonar_password" {
   description = "Please enter password for SonarQube DB"
   default = "DevOps365"
 }
+
+######################################################
+##                    Packages                      ##
+######################################################
+
+variable "nexus_version" {
+  default     = "nexus-3.18.0-01"
+  description = "Version of Nexus Repositpry OSS. https://github.com/sonatype/nexus-public/releases"
+}
+
+variable "sonar_version" {
+  default     = "sonarqube-7.9"
+  description = "Version of SonarQube. https://www.sonarqube.org/downloads/"
+}
+

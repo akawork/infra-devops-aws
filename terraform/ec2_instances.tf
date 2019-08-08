@@ -113,10 +113,24 @@ resource "aws_instance" "nginx" {
   volume_tags = {
     Name = var.project_name != "" ? "${var.project_name}-NginX-Server" : "NginX-Server"
   }
-  # Copies the nginx file to /etc/nginx.
+
+  # Copies the nginx config files to /etc/nginx.
   provisioner "file" {
-    source      = "../configs/nginx"
-    destination = "/tmp"
+    source      = template_dir.nginx_conf.destination_dir
+    destination = "/tmp/"
+    connection {
+      user                = "ec2-user"
+      host                = aws_instance.nginx.private_ip
+      private_key         = file(var.internal_private_key_path)
+      bastion_host        = aws_instance.bastion-server.public_ip
+      bastion_host_key    = file(var.bastion_key_path)
+      bastion_private_key = file(var.bastion_private_key_path)
+    }
+  }
+
+  provisioner "file" {
+    source      = "../configs/nginx/nginx.conf"
+    destination = "/tmp/nginx.conf"
     connection {
       user                = "ec2-user"
       host                = aws_instance.nginx.private_ip
@@ -131,7 +145,7 @@ resource "aws_instance" "nginx" {
 # Define Nexus Server inside the private subnet
 resource "aws_instance" "nexus" {
   ami           = var.amis[var.region]
-  instance_type = "t2.micro"
+  instance_type = "t2.medium"
   key_name      = aws_key_pair.internal.id
 
   network_interface {
@@ -139,7 +153,7 @@ resource "aws_instance" "nexus" {
     device_index         = 0
   }
 
-  # user_data = data.template_file.nexus_properties.rendered
+  user_data = data.template_file.nexus_properties.rendered
 
   tags = {
     Name = var.project_name != "" ? "${var.project_name}-Nexus-Server" : "Nexus-Server"

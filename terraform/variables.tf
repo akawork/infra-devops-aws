@@ -188,7 +188,53 @@ variable "sonar_username" {
 
 variable "sonar_password" {
   description = "Please enter password for SonarQube DB"
-  default = "DevOps365"
+  default     = "DevOps365"
+}
+
+## GitLab
+
+variable "gitlab_identifier" {
+  default     = "gitlab"
+  description = "Identifier for your DB"
+}
+
+variable "gitlab_storage" {
+  default     = "10"
+  description = "Storage size in GB"
+}
+
+variable "gitlab_engine" {
+  default     = "postgres"
+  description = "Engine type, example values mysql, postgres"
+}
+
+variable "gitlab_engine_version" {
+  description = "Engine version"
+
+  default = {
+    mysql    = "5.7.21"
+    postgres = "9.6.8"
+  }
+}
+
+variable "gitlab_instance_class" {
+  default     = "db.t2.micro"
+  description = "Instance class"
+}
+
+variable "gitlab_db_name" {
+  default     = "gitlabhq_production"
+  description = "db name"
+}
+
+variable "gitlab_username" {
+  default     = "gitlab"
+  description = "User name"
+}
+
+variable "gitlab_password" {
+  description = "Please enter password for GitLab DB"
+  default     = "DevOps365"
 }
 
 ######################################################

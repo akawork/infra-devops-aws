@@ -10,4 +10,4 @@
 /keypair/**
 
 # Nginx render files
-/configs/nginx/conf.render/**
+*/conf.render/**

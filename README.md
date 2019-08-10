@@ -22,17 +22,17 @@ This project buiding on frameworks:
     - [x] Gateway: Internet Gateway and NAT Gateway
     - [x] Security Group: Update inbound and outbound for all server
     - [x] EIP: only NAT gateway and NginX server have EIP
-  - [ ] Create Instances will using as Architecture
+  - [x] Create Instances will using as Architecture
   - [ ] Create script for auto install applications
-    - [ ] Bastion
-    - [ ] NginX
+    - [x] Bastion
+    - [x] NginX
     - [ ] Squid
     - [ ] Jira
     - [ ] Confluence
-    - [ ] Sonarqube
-    - [ ] GitLab
-    - [ ] Jenkins
-    - [ ] Nexus Repository
+    - [x] Sonarqube
+    - [x] GitLab
+    - [x] Jenkins
+    - [x] Nexus Repository
     - [ ] OpenLdap
   - [ ] Lambda function for auto turn-on and turn-off AWS Instances
 

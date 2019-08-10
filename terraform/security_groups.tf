@@ -428,8 +428,8 @@ resource "aws_security_group" "sggitlab" {
   }
 
   ingress {
-    from_port   = 8080
-    to_port     = 8080
+    from_port   = 80
+    to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["${aws_instance.nginx.private_ip}/32"]
   }

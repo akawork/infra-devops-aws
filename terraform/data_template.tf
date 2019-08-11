@@ -76,3 +76,38 @@ resource "template_dir" "gitlab_config" {
     git_url     = "http://${aws_route53_record.gitlab.name}"
   }
 }
+
+data "template_file" "bastion_config" {
+  template = file("../scripts/config_bastion.sh.tpl")
+
+  vars = {
+    squid_password   = var.squid_password
+    squid_username   = var.squid_username
+    squid_ip         = var.squid_ip
+    squid_port       = var.squid_port
+    internal_ssh_key = aws_key_pair.internal.key_name
+  }
+}
+
+data "template_file" "squid_install" {
+  template = file("../scripts/install_squid.sh.tpl")
+
+  vars = {
+    squid_password = var.squid_password
+    squid_username = var.squid_username
+  }
+}
+
+resource "template_dir" "squid_config" {
+  source_dir      = "../configs/squid/"
+  destination_dir = "../configs/squid/conf.render/"
+
+  vars = {
+    public_ip_range       = aws_subnet.public-subnet.cidr_block
+    application1_ip_range = aws_subnet.application1-subnet.cidr_block
+    application2_ip_range = aws_subnet.application2-subnet.cidr_block
+    agent1_ip_range       = aws_subnet.agent1-subnet.cidr_block
+    agent2_ip_range       = aws_subnet.agent2-subnet.cidr_block
+    squid_port            = var.squid_port
+  }
+}

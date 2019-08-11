@@ -301,3 +301,39 @@ variable "jira_version" {
   default     = "atlassian-jira-software-8.3.1"
   description = "Version of Jira. https://www.atlassian.com/software/jira/download"
 }
+
+######################################################
+##               Default Squid Config               ##
+######################################################
+
+# Username default for all server using Proxy in local netwowrk
+variable "squid_username" {
+  default     = "localproxy"
+  description = "Username using for login Squid Proxy"
+}
+
+# Password default for all server using Proxy in local netwowrk
+variable "squid_password" {
+  default     = "Squ1dl0cal"
+  description = "Password using for login Squid Proxy"
+}
+
+# Password default for all server using Proxy in local netwowrk
+variable "squid_port" {
+  default     = "8080"
+  description = "Port using for access Squid Proxy"
+}
+
+######################################################
+##                Default IP Address                ##
+######################################################
+
+variable "squid_ip" {
+  default     = "10.15.1.101"
+  description = "IP of Squid Proxy"
+}
+
+variable "bastion_ip" {
+  default     = "10.15.1.200"
+  description = "IP of Bastion Proxy"
+}

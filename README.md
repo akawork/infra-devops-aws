@@ -26,8 +26,8 @@ This project buiding on frameworks:
   - [ ] Create script for auto install applications
     - [x] Bastion
     - [x] NginX
-    - [ ] Squid
     - [x] Jira
+    - [x] Squid
     - [ ] Confluence
     - [x] Sonarqube
     - [x] GitLab

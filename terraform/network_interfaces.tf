@@ -1,7 +1,7 @@
 # Define network interface for Bastion Server
 resource "aws_network_interface" "bastion" {
   subnet_id         = aws_subnet.public-subnet.id
-  private_ips       = ["10.15.1.200"]
+  private_ips       = [var.bastion_ip]
   security_groups   = [aws_security_group.sgbastion.id]
   source_dest_check = false
 
@@ -37,7 +37,7 @@ resource "aws_network_interface" "nat_instance" {
 # Define network interface for Squid Server
 resource "aws_network_interface" "squid" {
   subnet_id         = aws_subnet.public-subnet.id
-  private_ips       = ["10.15.1.101"]
+  private_ips       = [var.squid_ip]
   security_groups   = [aws_security_group.sgsquid.id]
   source_dest_check = false
 

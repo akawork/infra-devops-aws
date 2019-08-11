@@ -9,5 +9,5 @@
 /terraform/*.tfvars
 /keypair/**
 
-# Nginx render files
-*/conf.render/**
+# render files
+**/conf.render/**

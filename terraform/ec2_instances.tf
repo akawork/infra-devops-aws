@@ -14,6 +14,7 @@ resource "aws_instance" "bastion-server" {
   ami           = var.amis[var.region]
   instance_type = "t2.nano"
   key_name      = aws_key_pair.bastion.id
+  user_data     = data.template_file.bastion_config.rendered
 
   network_interface {
     network_interface_id = aws_network_interface.bastion.id
@@ -73,16 +74,30 @@ resource "aws_instance" "nat_instance" {
   }
 }
 
-# Define NAT Instance Server inside the public subnet
+# Define Squid Server inside the public subnet
 resource "aws_instance" "squid" {
   ami           = var.amis[var.region]
   instance_type = "t2.nano"
   key_name      = aws_key_pair.internal.id
-  user_data     = file("../scripts/install_squid.sh")
+  user_data     = data.template_file.squid_install.rendered
 
   network_interface {
     network_interface_id = aws_network_interface.squid.id
     device_index         = 0
+  }
+
+  # Copies the squid config files to /etc/squid.
+  provisioner "file" {
+    source      = template_dir.squid_config.destination_dir
+    destination = "/tmp/"
+    connection {
+      user                = "ec2-user"
+      host                = aws_instance.squid.private_ip
+      private_key         = file(var.internal_private_key_path)
+      bastion_host        = aws_instance.bastion-server.public_ip
+      bastion_host_key    = file(var.bastion_key_path)
+      bastion_private_key = file(var.bastion_private_key_path)
+    }
   }
 
   tags = {

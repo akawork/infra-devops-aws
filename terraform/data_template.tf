@@ -18,6 +18,26 @@ data "template_file" "nexus_properties" {
   }
 }
 
+data "template_file" "jira_properties" {
+  template = file("../scripts/install_jira.sh.tpl")
+
+  vars = {
+    jira_version  = var.jira_version
+  }
+}
+
+resource "template_dir" "jira_config" {
+  source_dir      = "../configs/jira/"
+  destination_dir = "../configs/jira/conf.render/"
+
+  vars = {
+    db_endpoint   = aws_db_instance.jira.endpoint
+    db_name       = var.jira_db_name
+    db_password   = var.jira_password
+    db_username   = var.jira_username
+  }
+}
+
 resource "template_dir" "nginx_conf" {
   source_dir      = "../configs/nginx/conf.d/"
   destination_dir = "../configs/nginx/conf.render/"
@@ -27,6 +47,7 @@ resource "template_dir" "nginx_conf" {
     sonar_domain_name   = aws_route53_record.sonar.name
     nexus_domain_name   = aws_route53_record.nexus.name
     gitlab_domain_name  = aws_route53_record.gitlab.name
+    jira_domain_name    = aws_route53_record.jira.name
   }
 }
 

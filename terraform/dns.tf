@@ -34,3 +34,11 @@ resource "aws_route53_record" "gitlab" {
   ttl     = "300"
   records = [aws_eip.nginx.public_ip]
 }
+
+resource "aws_route53_record" "jira" {
+  zone_id = data.aws_route53_zone.akawork.zone_id
+  name    = "jira.${data.aws_route53_zone.akawork.name}"
+  type    = "A"
+  ttl     = "300"
+  records = [aws_eip.nginx.public_ip]
+}

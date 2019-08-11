@@ -40,20 +40,21 @@ resource "aws_db_instance" "gitlab" {
 }
 
 # # Define Jira Database  
-# resource "aws_db_instance" "jira" {
-#   depends_on             = ["aws_security_group.sgdb"]
-#   identifier             = var.jira_identifier
-#   allocated_storage      = var.jira_storage
-#   engine                 = var.jira_engine
-#   engine_version         = lookup(var.jira_engine_version, var.jira_engine)
-#   instance_class         = var.jira_instance_class
-#   name                   = var.jira_db_name
-#   username               = var.jira_username
-#   password               = var.jira_password
-#   vpc_security_group_ids = [aws_security_group.sgdb.id]
-#   db_subnet_group_name   = aws_db_subnet_group.default.id
-#   skip_final_snapshot    = true
-# }
+resource "aws_db_instance" "jira" {
+  depends_on             = ["aws_security_group.sgdb"]
+  identifier             = var.project_name != "" ? lower("${var.project_name}-${var.jira_identifier}") : var.jira_identifier
+  allocated_storage      = var.jira_storage
+  engine                 = var.jira_engine
+  engine_version         = lookup(var.jira_engine_version, var.jira_engine)
+  instance_class         = var.jira_instance_class
+  name                   = var.jira_db_name
+  username               = var.jira_username
+  password               = var.jira_password
+  vpc_security_group_ids = [aws_security_group.sgdb.id]
+  db_subnet_group_name   = aws_db_subnet_group.default.id
+  skip_final_snapshot    = true
+  apply_immediately      = true
+}
 
 # # Define Confluence Database  
 # resource "aws_db_instance" "confluence" {

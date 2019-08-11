@@ -27,7 +27,7 @@ This project buiding on frameworks:
     - [x] Bastion
     - [x] NginX
     - [ ] Squid
-    - [ ] Jira
+    - [x] Jira
     - [ ] Confluence
     - [x] Sonarqube
     - [x] GitLab

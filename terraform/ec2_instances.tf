@@ -211,8 +211,9 @@ resource "aws_instance" "jenkins" {
 
 # Define Jira Server inside the private subnet
 resource "aws_instance" "jira" {
+  depends_on    = ["aws_db_instance.jira"]
   ami           = var.amis[var.region]
-  instance_type = "t2.micro"
+  instance_type = "t2.small"
   key_name      = aws_key_pair.internal.id
 
   network_interface {
@@ -220,7 +221,7 @@ resource "aws_instance" "jira" {
     device_index         = 0
   }
 
-  #  user_data = "${file("./scripts/install_jira.sh")}"
+  user_data = data.template_file.jira_properties.rendered
 
   tags = {
     Name = var.project_name != "" ? "${var.project_name}-Jira-Server" : "Jira-Server"
@@ -228,6 +229,20 @@ resource "aws_instance" "jira" {
 
   volume_tags = {
     Name = var.project_name != "" ? "${var.project_name}-Jira-Server" : "Jira-Server"
+  }
+
+  # Copies the dbconfig file to jira instance.
+  provisioner "file" {
+    source      = template_dir.jira_config.destination_dir
+    destination = "/tmp/"
+    connection {
+      user                = "ec2-user"
+      host                = aws_instance.jira.private_ip
+      private_key         = file(var.internal_private_key_path)
+      bastion_host        = aws_instance.bastion-server.public_ip
+      bastion_host_key    = file(var.bastion_key_path)
+      bastion_private_key = file(var.bastion_private_key_path)
+    }
   }
 }
 

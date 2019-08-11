@@ -237,6 +237,52 @@ variable "gitlab_password" {
   default     = "DevOps365"
 }
 
+## Jira
+
+variable "jira_identifier" {
+  default     = "jira"
+  description = "Identifier for your DB"
+}
+
+variable "jira_storage" {
+  default     = "10"
+  description = "Storage size in GB"
+}
+
+variable "jira_engine" {
+  default     = "postgres"
+  description = "Engine type, example values mysql, postgres"
+}
+
+variable "jira_engine_version" {
+  description = "Engine version"
+
+  default = {
+    mysql    = "5.7.21"
+    postgres = "9.6.8"
+  }
+}
+
+variable "jira_instance_class" {
+  default     = "db.t2.micro"
+  description = "Instance class"
+}
+
+variable "jira_db_name" {
+  default     = "jira"
+  description = "Database name"
+}
+
+variable "jira_username" {
+  default     = "jira"
+  description = "User name"
+}
+
+variable "jira_password" {
+  description = "Please enter password for jira DB"
+  default = "DevOps365"
+}
+
 ######################################################
 ##                    Packages                      ##
 ######################################################
@@ -251,3 +297,7 @@ variable "sonar_version" {
   description = "Version of SonarQube. https://www.sonarqube.org/downloads/"
 }
 
+variable "jira_version" {
+  default     = "atlassian-jira-software-8.3.1"
+  description = "Version of Jira. https://www.atlassian.com/software/jira/download"
+}

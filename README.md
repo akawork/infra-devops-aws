@@ -34,6 +34,9 @@ This project buiding on frameworks:
     - [x] Jenkins
     - [x] Nexus Repository
     - [ ] OpenLdap
+    - [ ] Prometeus
+    - [ ] Grafana
+    - [ ] Zabbix
   - [ ] Lambda function for auto turn-on and turn-off AWS Instances
 
 ## Precondition

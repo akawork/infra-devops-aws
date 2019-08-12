@@ -283,6 +283,52 @@ variable "jira_password" {
   default = "DevOps365"
 }
 
+## Confluence
+
+variable "confluence_identifier" {
+  default     = "confluence"
+  description = "Identifier for your DB"
+}
+
+variable "confluence_storage" {
+  default     = "10"
+  description = "Storage size in GB"
+}
+
+variable "confluence_engine" {
+  default     = "postgres"
+  description = "Engine type, example values mysql, postgres"
+}
+
+variable "confluence_engine_version" {
+  description = "Engine version"
+
+  default = {
+    mysql    = "5.7.21"
+    postgres = "9.6.8"
+  }
+}
+
+variable "confluence_instance_class" {
+  default     = "db.t2.micro"
+  description = "Instance class"
+}
+
+variable "confluence_db_name" {
+  default     = "confluence"
+  description = "Database name"
+}
+
+variable "confluence_username" {
+  default     = "confluence"
+  description = "User name"
+}
+
+variable "confluence_password" {
+  description = "Please enter password for jira DB"
+  default = "DevOps365"
+}
+
 ######################################################
 ##                    Packages                      ##
 ######################################################
@@ -300,6 +346,11 @@ variable "sonar_version" {
 variable "jira_version" {
   default     = "atlassian-jira-software-8.3.1"
   description = "Version of Jira. https://www.atlassian.com/software/jira/download"
+}
+
+variable "confluence_version" {
+  default     = "atlassian-confluence-6.15.7"
+  description = "Version of Confluence. https://www.atlassian.com/software/confluence/download"
 }
 
 ######################################################

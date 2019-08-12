@@ -56,18 +56,19 @@ resource "aws_db_instance" "jira" {
   apply_immediately      = true
 }
 
-# # Define Confluence Database  
-# resource "aws_db_instance" "confluence" {
-#   depends_on             = ["aws_security_group.sgdb"]
-#   identifier             = var.confluence_identifier
-#   allocated_storage      = var.confluence_storage
-#   engine                 = var.confluence_engine
-#   engine_version         = lookup(var.confluence_engine_version, var.confluence_engine)
-#   instance_class         = var.confluence_instance_class
-#   name                   = var.confluence_db_name
-#   username               = var.confluence_username
-#   password               = var.confluence_password
-#   vpc_security_group_ids = [aws_security_group.sgdb.id]
-#   db_subnet_group_name   = aws_db_subnet_group.default.id
-#   skip_final_snapshot    = true
-# }
+# Define Confluence Database  
+resource "aws_db_instance" "confluence" {
+  depends_on             = ["aws_security_group.sgdb"]
+  identifier             = var.project_name != "" ? lower("${var.project_name}-${var.confluence_identifier}") : var.confluence_identifier
+  allocated_storage      = var.confluence_storage
+  engine                 = var.confluence_engine
+  engine_version         = lookup(var.confluence_engine_version, var.confluence_engine)
+  instance_class         = var.confluence_instance_class
+  name                   = var.confluence_db_name
+  username               = var.confluence_username
+  password               = var.confluence_password
+  vpc_security_group_ids = [aws_security_group.sgdb.id]
+  db_subnet_group_name   = aws_db_subnet_group.default.id
+  skip_final_snapshot    = true
+  apply_immediately      = true
+}

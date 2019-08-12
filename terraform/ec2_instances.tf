@@ -263,8 +263,9 @@ resource "aws_instance" "jira" {
 
 # Define Confluence Server inside the private subnet
 resource "aws_instance" "confluence" {
+  depends_on    = ["aws_db_instance.confluence"]
   ami           = var.amis[var.region]
-  instance_type = "t2.micro"
+  instance_type = "t2.small"
   key_name      = aws_key_pair.internal.id
 
   network_interface {
@@ -272,7 +273,7 @@ resource "aws_instance" "confluence" {
     device_index         = 0
   }
 
-  #  user_data = "${file("./scripts/install_confluence.sh")}  
+  user_data = data.template_file.confluence_properties.rendered 
 
   tags = {
     Name = var.project_name != "" ? "${var.project_name}-Confluence-Server" : "Confluence-Server"

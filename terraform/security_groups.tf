@@ -546,8 +546,8 @@ resource "aws_security_group" "sgconfluence" {
   }
 
   ingress {
-    from_port   = 8080
-    to_port     = 8080
+    from_port   = 8090
+    to_port     = 8090
     protocol    = "tcp"
     cidr_blocks = ["${aws_instance.nginx.private_ip}/32"]
   }

@@ -28,7 +28,7 @@ This project buiding on frameworks:
     - [x] NginX
     - [x] Jira
     - [x] Squid
-    - [ ] Confluence
+    - [x] Confluence
     - [x] Sonarqube
     - [x] GitLab
     - [x] Jenkins

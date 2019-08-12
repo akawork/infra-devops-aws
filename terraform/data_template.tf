@@ -38,16 +38,25 @@ resource "template_dir" "jira_config" {
   }
 }
 
+data "template_file" "confluence_properties" {
+  template = file("../scripts/install_confluence.sh.tpl")
+
+  vars = {
+    confluence_version  = var.confluence_version
+  }
+}
+
 resource "template_dir" "nginx_conf" {
   source_dir      = "../configs/nginx/conf.d/"
   destination_dir = "../configs/nginx/conf.render/"
 
   vars = {
-    jenkins_domain_name = aws_route53_record.jenkins.name
-    sonar_domain_name   = aws_route53_record.sonar.name
-    nexus_domain_name   = aws_route53_record.nexus.name
-    gitlab_domain_name  = aws_route53_record.gitlab.name
-    jira_domain_name    = aws_route53_record.jira.name
+    jenkins_domain_name     = aws_route53_record.jenkins.name
+    sonar_domain_name       = aws_route53_record.sonar.name
+    nexus_domain_name       = aws_route53_record.nexus.name
+    gitlab_domain_name      = aws_route53_record.gitlab.name
+    jira_domain_name        = aws_route53_record.jira.name
+    confluence_domain_name  = aws_route53_record.confluence.name
   }
 }
 

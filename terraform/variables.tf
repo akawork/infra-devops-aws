@@ -353,6 +353,11 @@ variable "confluence_version" {
   description = "Version of Confluence. https://www.atlassian.com/software/confluence/download"
 }
 
+variable "prometheus_version" {
+  default     = "2.11.1"
+  description = "Version of Prometheus. https://prometheus.io/download/"
+}
+
 ######################################################
 ##               Default Squid Config               ##
 ######################################################

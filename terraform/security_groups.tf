@@ -678,6 +678,50 @@ resource "aws_security_group" "sggrafana" {
   }
 }
 
+# Define the security group for Prometheus
+resource "aws_security_group" "sgprometheus" {
+  name        = "DevOps_Prometheus_SG"
+  description = "Allow incoming HTTP connections & SSH access"
+  vpc_id      = aws_vpc.devops.id
+
+  tags = {
+    Name = var.project_name != "" ? "${var.project_name}-Prometheus-Server-SG" : "Prometheus-Server-SG"
+  }
+
+  ingress {
+    from_port   = 9090
+    to_port     = 9090
+    protocol    = "tcp"
+    cidr_blocks = ["${aws_instance.nginx.private_ip}/32"]
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["${var.bastion_ip}/32"]
+  }
+
+  egress {
+    from_port = 32768
+    to_port   = 65535
+    protocol  = "tcp"
+    cidr_blocks = [
+      "${aws_instance.nginx.private_ip}/32",
+      "${var.bastion_ip}/32",
+    ]
+    description = "Allow response port from Prometheus Server to another server"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Used to download packages"
+  }
+}
+
 # Define the security group for Zabbix
 resource "aws_security_group" "sgzabbix" {
   name        = "DevOps_Zabbix_SG"

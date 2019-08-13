@@ -1,3 +1,4 @@
+# SonarQube
 data "template_file" "sonar_properties" {
   template = file("../scripts/install_sonar.sh.tpl")
 
@@ -10,6 +11,7 @@ data "template_file" "sonar_properties" {
   }
 }
 
+# Nexus
 data "template_file" "nexus_properties" {
   template = file("../scripts/install_nexus.sh.tpl")
 
@@ -18,6 +20,7 @@ data "template_file" "nexus_properties" {
   }
 }
 
+# Jira
 data "template_file" "jira_properties" {
   template = file("../scripts/install_jira.sh.tpl")
 
@@ -38,6 +41,7 @@ resource "template_dir" "jira_config" {
   }
 }
 
+# Confluence
 data "template_file" "confluence_properties" {
   template = file("../scripts/install_confluence.sh.tpl")
 
@@ -46,6 +50,7 @@ data "template_file" "confluence_properties" {
   }
 }
 
+# Nginx
 resource "template_dir" "nginx_conf" {
   source_dir      = "../configs/nginx/conf.d/"
   destination_dir = "../configs/nginx/conf.render/"
@@ -60,6 +65,7 @@ resource "template_dir" "nginx_conf" {
   }
 }
 
+# Gitlab
 data "template_file" "gitlab_install" {
   template = file("../scripts/install_gitlab.sh.tpl")
 
@@ -86,6 +92,7 @@ resource "template_dir" "gitlab_config" {
   }
 }
 
+# Bastion
 data "template_file" "bastion_config" {
   template = file("../scripts/config_bastion.sh.tpl")
 
@@ -98,6 +105,7 @@ data "template_file" "bastion_config" {
   }
 }
 
+# Squid
 data "template_file" "squid_install" {
   template = file("../scripts/install_squid.sh.tpl")
 
@@ -120,3 +128,22 @@ resource "template_dir" "squid_config" {
     squid_port            = var.squid_port
   }
 }
+
+# Prometheus
+data "template_file" "prometheus_install" {
+  template = file("../scripts/install_prometheus.sh.tpl")
+
+  vars = {
+    prometheus_version = var.prometheus_version
+  }
+}
+
+resource "template_dir" "prometheus_config" {
+  source_dir      = "../configs/prometheus/"
+  destination_dir = "../configs/prometheus/conf.render/"
+
+  vars = {
+    prometheus_url     = "localhost:9090"
+  }
+}
+

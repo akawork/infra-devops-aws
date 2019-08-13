@@ -153,3 +153,15 @@ resource "aws_network_interface" "grafana" {
     Name = var.project_name != "" ? "${var.project_name}-Grafana-Server" : "Grafana-Server"
   }
 }
+
+# Define network interface for Prometheus Server
+resource "aws_network_interface" "prometheus" {
+  subnet_id         = aws_subnet.application1-subnet.id
+  private_ips       = ["10.15.2.203"]
+  security_groups   = [aws_security_group.sgprometheus.id]
+  source_dest_check = false
+
+  tags = {
+    Name = var.project_name != "" ? "${var.project_name}-Prometheus-Server" : "Prometheus-Server"
+  }
+}

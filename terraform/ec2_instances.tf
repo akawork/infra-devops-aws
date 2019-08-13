@@ -412,7 +412,7 @@ resource "aws_instance" "openldap" {
     device_index         = 0
   }
 
-  #  user_data = "${file("./scripts/install_openldap.sh")}"
+   user_data = data.template_file.openldap_install.rendered
 
   tags = {
     Name = var.project_name != "" ? "${var.project_name}-OpenLDAP-Server" : "OpenLDAP-Server"

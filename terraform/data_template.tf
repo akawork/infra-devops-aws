@@ -129,6 +129,15 @@ resource "template_dir" "squid_config" {
   }
 }
 
+data "template_file" "openldap_install" {
+  template = file("../scripts/install_openldap.sh.tpl")
+
+  vars = {
+    # openldap_password = var.openldap_password
+    # openldap_username = var.openldap_username
+  }
+}
+
 # Prometheus
 data "template_file" "prometheus_install" {
   template = file("../scripts/install_prometheus.sh.tpl")

@@ -381,6 +381,16 @@ variable "squid_port" {
 }
 
 ######################################################
+##               Default Squid Config               ##
+######################################################
+
+# Password default for all server using Proxy in local netwowrk
+variable "openldap_password" {
+  default     = "0penldap"
+  description = "Password using for root account OpenLDAP"
+}
+
+######################################################
 ##                Default IP Address                ##
 ######################################################
 

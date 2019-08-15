@@ -34,11 +34,11 @@ function main {
 
     if [[ $OS == "centos" || $OS == "amazon" ]];
     then
+        config_ssh_key
+        echo "[SUCCESS] Configuration SSH key complete!"  >> $LOG_INSTALL
         config_proxy
         echo "[SUCCESS] Configuration Proxy complete!"  >> $LOG_INSTALL
         check_internet_connect
-        config_ssh_key
-        echo "[SUCCESS] Configuration SSH key complete!"  >> $LOG_INSTALL
         install_tools
         echo "[SUCCESS] Install tools complete!"  >> $LOG_INSTALL
     else

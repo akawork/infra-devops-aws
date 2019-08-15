@@ -1,0 +1,4 @@
+olcSuffix: dc=acme,dc=com
+olcRootDN: cn=${cn_manager},dc=${dc_root},dc=${dc_root2}
+olcAccess: {0}to attrs=userPassword by self write by dn.base="cn=${cn_manager},dc=${dc_root},dc=${dc_root2}" write by anonymous auth by * none
+olcAccess: {1}to * by dn.base="cn=${cn_manager},dc=${dc_root},dc=${dc_root2}" write by self write by * read

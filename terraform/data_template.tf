@@ -129,11 +129,28 @@ resource "template_dir" "squid_config" {
   }
 }
 
+# OpenLDAP
 data "template_file" "openldap_install" {
   template = file("../scripts/install_openldap.sh.tpl")
 
   vars = {
-    # openldap_password = var.openldap_password
+    openldap_password = var.openldap_password
+    cn_manager = "Manager"
+    dn_root = "akawork"
+    dn_root2 = "io"
+    # openldap_username = var.openldap_username
+  }
+}
+
+resource "template_dir" "openldap_config" {
+  source_dir      = "../configs/opendlap/"
+  destination_dir = "../configs/opendlap/conf.render/"
+
+  vars = {
+    openldap_password = var.openldap_password
+    cn_manager = "Manager"
+    dn_root = "akawork"
+    dn_root2 = "io"
     # openldap_username = var.openldap_username
   }
 }

@@ -39,7 +39,7 @@ resource "aws_db_instance" "gitlab" {
   apply_immediately      = true
 }
 
-# # Define Jira Database  
+# Define Jira Database  
 resource "aws_db_instance" "jira" {
   depends_on             = ["aws_security_group.sgdb"]
   identifier             = var.project_name != "" ? lower("${var.project_name}-${var.jira_identifier}") : var.jira_identifier

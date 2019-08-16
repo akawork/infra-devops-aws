@@ -145,7 +145,7 @@ resource "aws_network_interface" "zabbix" {
 # Define network interface for Grafana Server
 resource "aws_network_interface" "grafana" {
   subnet_id         = aws_subnet.application1-subnet.id
-  private_ips       = ["10.15.2.202"]
+  private_ips       = [var.grafana_ip]
   security_groups   = [aws_security_group.sggrafana.id]
   source_dest_check = false
 
@@ -157,7 +157,7 @@ resource "aws_network_interface" "grafana" {
 # Define network interface for Prometheus Server
 resource "aws_network_interface" "prometheus" {
   subnet_id         = aws_subnet.application1-subnet.id
-  private_ips       = ["10.15.2.203"]
+  private_ips       = [var.prometheus_ip]
   security_groups   = [aws_security_group.sgprometheus.id]
   source_dest_check = false
 

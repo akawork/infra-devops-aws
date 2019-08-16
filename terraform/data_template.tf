@@ -62,6 +62,7 @@ resource "template_dir" "nginx_conf" {
     gitlab_domain_name      = aws_route53_record.gitlab.name
     jira_domain_name        = aws_route53_record.jira.name
     confluence_domain_name  = aws_route53_record.confluence.name
+    monitor_domain_name     = aws_route53_record.monitor.name
   }
 }
 
@@ -147,3 +148,20 @@ resource "template_dir" "prometheus_config" {
   }
 }
 
+# Grafana
+data "template_file" "grafana_install" {
+  template = file("../scripts/install_grafana.sh.tpl")
+
+  vars = {
+    grafana_version = var.grafana_version
+  }
+}
+
+resource "template_dir" "grafana_config" {
+  source_dir      = "../configs/grafana/"
+  destination_dir = "../configs/grafana/conf.render/"
+
+  vars = {
+    prometheus_url     = "http://${var.prometheus_ip}:9090"
+  }
+}

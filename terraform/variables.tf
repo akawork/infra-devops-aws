@@ -358,6 +358,11 @@ variable "prometheus_version" {
   description = "Version of Prometheus. https://prometheus.io/download/"
 }
 
+variable "grafana_version" {
+  default     = "grafana-6.3.2-1"
+  description = "Version of Grafana. https://grafana.com/grafana/download"
+}
+
 ######################################################
 ##               Default Squid Config               ##
 ######################################################
@@ -392,4 +397,14 @@ variable "squid_ip" {
 variable "bastion_ip" {
   default     = "10.15.1.200"
   description = "IP of Bastion Proxy"
+}
+
+variable "grafana_ip" {
+  default     = "10.15.2.202"
+  description = "IP of Grafana"
+}
+
+variable "prometheus_ip" {
+  default     = "10.15.2.203"
+  description = "IP of Prometheus"
 }

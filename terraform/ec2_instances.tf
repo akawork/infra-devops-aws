@@ -332,7 +332,7 @@ resource "aws_instance" "grafana" {
     device_index         = 0
   }
 
-  #  user_data = "${file("./scripts/install_grafana.sh")}"
+  user_data = data.template_file.grafana_install.rendered
 
   tags = {
     Name = var.project_name != "" ? "${var.project_name}-Grafana-Server" : "Grafana-Server"
@@ -340,6 +340,20 @@ resource "aws_instance" "grafana" {
 
   volume_tags = {
     Name = var.project_name != "" ? "${var.project_name}-Grafana-Server" : "Grafana-Server"
+  }
+
+  # Copies the config file to grafana instance.
+  provisioner "file" {
+    source      = template_dir.grafana_config.destination_dir
+    destination = "/tmp/"
+    connection {
+      user                = "ec2-user"
+      host                = aws_instance.grafana.private_ip
+      private_key         = file(var.internal_private_key_path)
+      bastion_host        = aws_instance.bastion-server.public_ip
+      bastion_host_key    = file(var.bastion_key_path)
+      bastion_private_key = file(var.bastion_private_key_path)
+    }
   }
 }
 

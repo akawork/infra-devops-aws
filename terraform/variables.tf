@@ -28,7 +28,7 @@ variable "az_2" {
 }
 
 variable "domain_name" {
-  default     = "demo.akawork.io"
+  default     = "demo.example.com"
   description = "Your domain name"
 }
 

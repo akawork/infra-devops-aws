@@ -32,11 +32,6 @@ variable "domain_name" {
   description = "Your domain name"
 }
 
-variable "project_namespace" {
-  default     = "DevOps"
-  description = "Your Project Namespace"
-}
-
 ######################################################
 ##                      VPC                         ##
 ######################################################
@@ -339,7 +334,7 @@ variable "nexus_version" {
 }
 
 variable "sonar_version" {
-  default     = "sonarqube-7.9"
+  default     = "sonarqube-7.9.1"
   description = "Version of SonarQube. https://www.sonarqube.org/downloads/"
 }
 

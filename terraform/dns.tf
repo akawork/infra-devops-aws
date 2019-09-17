@@ -58,11 +58,3 @@ resource "aws_route53_record" "monitor" {
   ttl     = "300"
   records = [aws_eip.nginx.public_ip]
 }
-
-resource "aws_route53_record" "monitor" {
-  zone_id = data.aws_route53_zone.akawork.zone_id
-  name    = "monitor.${data.aws_route53_zone.akawork.name}"
-  type    = "A"
-  ttl     = "300"
-  records = [aws_eip.nginx.public_ip]
-}

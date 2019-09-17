@@ -156,7 +156,7 @@ resource "aws_security_group" "sgnginx" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${var.bastion_ip}/32"]
   }
 
   ingress {
@@ -192,7 +192,7 @@ resource "aws_security_group" "sgnginx" {
 
 # Define the security group for Squid
 resource "aws_security_group" "sgsquid" {
-  name        = "DevOps_Squid_SG"
+  name        = var.project_name != "" ? "${var.project_name}-Squid-SG" : "Squid-SG"
   description = "Allow incoming HTTP connections & SSH access"
   vpc_id      = aws_vpc.devops.id
 

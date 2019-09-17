@@ -28,7 +28,7 @@ variable "az_2" {
 }
 
 variable "domain_name" {
-  default     = "demo.example.com"
+  default     = "demo.akawork.io"
   description = "Your domain name"
 }
 
@@ -275,7 +275,7 @@ variable "jira_username" {
 
 variable "jira_password" {
   description = "Please enter password for jira DB"
-  default = "DevOps365"
+  default     = "DevOps365"
 }
 
 ## Confluence
@@ -321,7 +321,7 @@ variable "confluence_username" {
 
 variable "confluence_password" {
   description = "Please enter password for jira DB"
-  default = "DevOps365"
+  default     = "DevOps365"
 }
 
 ######################################################
@@ -378,6 +378,15 @@ variable "squid_password" {
 variable "squid_port" {
   default     = "8080"
   description = "Port using for access Squid Proxy"
+}
+
+######################################################
+##              Default Bastion Config              ##
+######################################################
+
+variable "bastion_ssh_port" {
+  default     = "443"
+  description = "Port using for access SSH to Bastion"
 }
 
 ######################################################

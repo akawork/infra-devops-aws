@@ -16,11 +16,6 @@ resource "aws_instance" "bastion-server" {
   key_name      = aws_key_pair.bastion.id
   user_data     = data.template_file.bastion_config.rendered
 
-  network_interface {
-    network_interface_id = aws_network_interface.bastion.id
-    device_index         = 0
-  }
-
   # Copies the internal-key to /home/ec2-user
   provisioner "file" {
     source      = "../keypair/internal-key"
@@ -30,6 +25,22 @@ resource "aws_instance" "bastion-server" {
       host        = self.public_ip
       private_key = file(var.bastion_private_key_path)
     }
+  }
+
+  # Copies the SSH config files to /etc/ssh.
+  provisioner "file" {
+    source      = template_dir.bastion_ssh_config.destination_dir
+    destination = "/tmp/"
+    connection {
+      user        = "ec2-user"
+      host        = self.public_ip
+      private_key = file(var.bastion_private_key_path)
+    }
+  }
+
+  network_interface {
+    network_interface_id = aws_network_interface.bastion.id
+    device_index         = 0
   }
 
   # provisioner "local-exec" {
@@ -95,6 +106,7 @@ resource "aws_instance" "squid" {
       host                = aws_instance.squid.private_ip
       private_key         = file(var.internal_private_key_path)
       bastion_host        = aws_instance.bastion-server.public_ip
+      bastion_port        = var.bastion_ssh_port
       bastion_host_key    = file(var.bastion_key_path)
       bastion_private_key = file(var.bastion_private_key_path)
     }
@@ -138,6 +150,7 @@ resource "aws_instance" "nginx" {
       host                = aws_instance.nginx.private_ip
       private_key         = file(var.internal_private_key_path)
       bastion_host        = aws_instance.bastion-server.public_ip
+      bastion_port        = var.bastion_ssh_port
       bastion_host_key    = file(var.bastion_key_path)
       bastion_private_key = file(var.bastion_private_key_path)
     }
@@ -151,6 +164,7 @@ resource "aws_instance" "nginx" {
       host                = aws_instance.nginx.private_ip
       private_key         = file(var.internal_private_key_path)
       bastion_host        = aws_instance.bastion-server.public_ip
+      bastion_port        = var.bastion_ssh_port
       bastion_host_key    = file(var.bastion_key_path)
       bastion_private_key = file(var.bastion_private_key_path)
     }
@@ -255,6 +269,7 @@ resource "aws_instance" "jira" {
       host                = aws_instance.jira.private_ip
       private_key         = file(var.internal_private_key_path)
       bastion_host        = aws_instance.bastion-server.public_ip
+      bastion_port        = var.bastion_ssh_port
       bastion_host_key    = file(var.bastion_key_path)
       bastion_private_key = file(var.bastion_private_key_path)
     }
@@ -273,7 +288,7 @@ resource "aws_instance" "confluence" {
     device_index         = 0
   }
 
-  user_data = data.template_file.confluence_properties.rendered 
+  user_data = data.template_file.confluence_properties.rendered
 
   tags = {
     Name = var.project_name != "" ? "${var.project_name}-Confluence-Server" : "Confluence-Server"
@@ -315,6 +330,7 @@ resource "aws_instance" "gitlab" {
       host                = aws_instance.gitlab.private_ip
       private_key         = file(var.internal_private_key_path)
       bastion_host        = aws_instance.bastion-server.public_ip
+      bastion_port        = var.bastion_ssh_port
       bastion_host_key    = file(var.bastion_key_path)
       bastion_private_key = file(var.bastion_private_key_path)
     }
@@ -351,6 +367,7 @@ resource "aws_instance" "grafana" {
       host                = aws_instance.grafana.private_ip
       private_key         = file(var.internal_private_key_path)
       bastion_host        = aws_instance.bastion-server.public_ip
+      bastion_port        = var.bastion_ssh_port
       bastion_host_key    = file(var.bastion_key_path)
       bastion_private_key = file(var.bastion_private_key_path)
     }
@@ -387,6 +404,7 @@ resource "aws_instance" "prometheus" {
       host                = aws_instance.prometheus.private_ip
       private_key         = file(var.internal_private_key_path)
       bastion_host        = aws_instance.bastion-server.public_ip
+      bastion_port        = var.bastion_ssh_port
       bastion_host_key    = file(var.bastion_key_path)
       bastion_private_key = file(var.bastion_private_key_path)
     }

@@ -297,7 +297,7 @@ resource "aws_security_group" "sgnexus" {
     from_port   = 8081
     to_port     = 8081
     protocol    = "tcp"
-    cidr_blocks = ["${aws_instance.nginx.private_ip}/32"]
+    cidr_blocks = ["${module.nginx.private_ip}/32"]
   }
 
   ingress {
@@ -312,7 +312,7 @@ resource "aws_security_group" "sgnexus" {
     to_port   = 65535
     protocol  = "tcp"
     cidr_blocks = [
-      "${aws_instance.nginx.private_ip}/32",
+      "${module.nginx.private_ip}/32",
       "${var.bastion_ip}/32",
     ]
     description = "Allow response port from Nexus Server to another server"
@@ -341,7 +341,7 @@ resource "aws_security_group" "sgsonar" {
     from_port   = 9000
     to_port     = 9000
     protocol    = "tcp"
-    cidr_blocks = ["${aws_instance.nginx.private_ip}/32"]
+    cidr_blocks = ["${module.nginx.private_ip}/32"]
   }
 
   ingress {
@@ -356,7 +356,7 @@ resource "aws_security_group" "sgsonar" {
     to_port   = 65535
     protocol  = "tcp"
     cidr_blocks = [
-      "${aws_instance.nginx.private_ip}/32",
+      "${module.nginx.private_ip}/32",
       "${var.bastion_ip}/32",
     ]
     description = "Allow response port from Nexus Server to another server"
@@ -396,7 +396,7 @@ resource "aws_security_group" "sgjenkins" {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
-    cidr_blocks = ["${aws_instance.nginx.private_ip}/32"]
+    cidr_blocks = ["${module.nginx.private_ip}/32"]
   }
 
   ingress {
@@ -411,7 +411,7 @@ resource "aws_security_group" "sgjenkins" {
     to_port   = 65535
     protocol  = "tcp"
     cidr_blocks = [
-      "${aws_instance.nginx.private_ip}/32",
+      "${module.nginx.private_ip}/32",
       "${var.bastion_ip}/32",
     ]
     description = "Allow response port from Nexus Server to another server"
@@ -439,7 +439,7 @@ resource "aws_security_group" "sggitlab" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["${aws_instance.nginx.private_ip}/32"]
+    cidr_blocks = ["${module.nginx.private_ip}/32"]
   }
 
   ingress {
@@ -454,7 +454,7 @@ resource "aws_security_group" "sggitlab" {
     to_port   = 65535
     protocol  = "tcp"
     cidr_blocks = [
-      "${aws_instance.nginx.private_ip}/32",
+      "${module.nginx.private_ip}/32",
       "${var.bastion_ip}/32",
     ]
     description = "Allow response port from Nexus Server to another server"
@@ -494,7 +494,7 @@ resource "aws_security_group" "sgjira" {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
-    cidr_blocks = ["${aws_instance.nginx.private_ip}/32"]
+    cidr_blocks = ["${module.nginx.private_ip}/32"]
   }
 
   ingress {
@@ -509,7 +509,7 @@ resource "aws_security_group" "sgjira" {
     to_port   = 65535
     protocol  = "tcp"
     cidr_blocks = [
-      "${aws_instance.nginx.private_ip}/32",
+      "${module.nginx.private_ip}/32",
       "${var.bastion_ip}/32",
     ]
     description = "Allow response port from Nexus Server to another server"
@@ -549,7 +549,7 @@ resource "aws_security_group" "sgconfluence" {
     from_port   = 8090
     to_port     = 8090
     protocol    = "tcp"
-    cidr_blocks = ["${aws_instance.nginx.private_ip}/32"]
+    cidr_blocks = ["${module.nginx.private_ip}/32"]
   }
 
   ingress {
@@ -564,7 +564,7 @@ resource "aws_security_group" "sgconfluence" {
     to_port   = 65535
     protocol  = "tcp"
     cidr_blocks = [
-      "${aws_instance.nginx.private_ip}/32",
+      "${module.nginx.private_ip}/32",
       "${var.bastion_ip}/32",
     ]
     description = "Allow response port from Nexus Server to another server"
@@ -604,7 +604,7 @@ resource "aws_security_group" "sgopenldap" {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
-    cidr_blocks = ["${aws_instance.nginx.private_ip}/32"]
+    cidr_blocks = ["${module.nginx.private_ip}/32"]
   }
 
   ingress {
@@ -619,7 +619,7 @@ resource "aws_security_group" "sgopenldap" {
     to_port   = 65535
     protocol  = "tcp"
     cidr_blocks = [
-      "${aws_instance.nginx.private_ip}/32",
+      "${module.nginx.private_ip}/32",
       "${var.bastion_ip}/32",
     ]
     description = "Allow response port from Nexus Server to another server"
@@ -648,7 +648,7 @@ resource "aws_security_group" "sggrafana" {
     from_port   = 3000
     to_port     = 3000
     protocol    = "tcp"
-    cidr_blocks = ["${aws_instance.nginx.private_ip}/32"]
+    cidr_blocks = ["${module.nginx.private_ip}/32"]
   }
 
   ingress {
@@ -663,7 +663,7 @@ resource "aws_security_group" "sggrafana" {
     to_port   = 65535
     protocol  = "tcp"
     cidr_blocks = [
-      "${aws_instance.nginx.private_ip}/32",
+      "${module.nginx.private_ip}/32",
       "${var.bastion_ip}/32",
     ]
     description = "Allow response port from Grafana Server to another server"
@@ -692,7 +692,7 @@ resource "aws_security_group" "sgprometheus" {
     from_port   = 9090
     to_port     = 9090
     protocol    = "tcp"
-    cidr_blocks = ["${aws_instance.nginx.private_ip}/32"]
+    cidr_blocks = ["${module.nginx.private_ip}/32"]
   }
 
   ingress {
@@ -707,7 +707,7 @@ resource "aws_security_group" "sgprometheus" {
     to_port   = 65535
     protocol  = "tcp"
     cidr_blocks = [
-      "${aws_instance.nginx.private_ip}/32",
+      "${module.nginx.private_ip}/32",
       "${var.bastion_ip}/32",
     ]
     description = "Allow response port from Prometheus Server to another server"
@@ -736,7 +736,7 @@ resource "aws_security_group" "sgzabbix" {
     from_port   = 3000
     to_port     = 3000
     protocol    = "tcp"
-    cidr_blocks = ["${aws_instance.nginx.private_ip}/32"]
+    cidr_blocks = ["${module.nginx.private_ip}/32"]
   }
 
   ingress {
@@ -751,7 +751,7 @@ resource "aws_security_group" "sgzabbix" {
     to_port   = 65535
     protocol  = "tcp"
     cidr_blocks = [
-      "${aws_instance.nginx.private_ip}/32",
+      "${module.nginx.private_ip}/32",
       "${var.bastion_ip}/32",
     ]
     description = "Allow response port from Zabbix Server to another server"

@@ -11,3 +11,5 @@
 
 # render files
 **/conf.render/**
+
+.DS_Store

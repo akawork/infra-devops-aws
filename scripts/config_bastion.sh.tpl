@@ -26,6 +26,11 @@ function check_internet_connect {
     esac
 }
 
+function update_ssh_config {
+    mv -f /tmp/sshd_config /etc/ssh/sshd_config
+    service sshd restart
+}
+
 function main {
     if [[ $EUID -ne 0 ]]; then
         echo "This script must be run as root" 1>&2  >> $LOG_INSTALL
@@ -34,6 +39,8 @@ function main {
 
     if [[ $OS == "centos" || $OS == "amazon" ]];
     then
+        update_ssh_config
+        echo "[SUCCESS] Update SSH configuration complete!"  >> $LOG_INSTALL
         config_proxy
         echo "[SUCCESS] Configuration Proxy complete!"  >> $LOG_INSTALL
         check_internet_connect

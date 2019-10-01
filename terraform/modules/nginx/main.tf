@@ -1,7 +1,7 @@
 # Define NginX Server inside the public subnet
 resource "aws_instance" "nginx" {
   ami           = var.ami
-  instance_type = "t2.micro"
+  instance_type = var.instance_type
   key_name      = var.key_pair
   user_data     = file(var.install_script)
 

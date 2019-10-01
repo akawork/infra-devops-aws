@@ -3,30 +3,20 @@ variable "ami" {
   description = "AMI ID"
 }
 
-variable "instance_type" {
-  type        = string
-  description = "Type of instance"
-}
-
 variable "project_name" {
   type        = string
   default     = ""
   description = "Project Name or System Name"
 }
 
+variable "instance_type" {
+  type        = string
+  description = "Instance type"
+}
+
 variable "key_pair" {
   type        = string
   description = "SSH key using for ssh remote connection"
-}
-
-variable "nginx_config" {
-  type        = string
-  description = "nginx.conf file"
-}
-
-variable "nginx_configd" {
-  type        = string
-  description = "Collect all configuration files in config.d"
 }
 
 variable "network_interface" {
@@ -36,12 +26,17 @@ variable "network_interface" {
 
 variable "install_script" {
   type        = string
-  description = "Install Nginx script"
+  description = "Install jenkins script"
+}
+
+variable "squid_config" {
+  type        = string
+  description = "Squid configuration"
 }
 
 variable "bastion_host" {
   type        = string
-  description = "Bastion Host IP for install Nginx in Local network"
+  description = "Bastion Host IP for install jenkins in Local network"
 }
 
 variable "bastion_host_key" {
@@ -56,7 +51,7 @@ variable "bastion_private_key" {
 
 variable "private_key" {
   type        = string
-  description = "Private key using for ssh to nginx server"
+  description = "Private key using for ssh to jenkins server"
 }
 
 variable "remote_user" {

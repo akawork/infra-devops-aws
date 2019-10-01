@@ -154,28 +154,6 @@ resource "aws_instance" "sonarqube" {
   }
 }
 
-# Define Jenkins Server inside the private subnet
-resource "aws_instance" "jenkins" {
-  ami           = var.amis[var.region]
-  instance_type = "t2.micro"
-  key_name      = aws_key_pair.internal.id
-
-  network_interface {
-    network_interface_id = aws_network_interface.jenkins.id
-    device_index         = 0
-  }
-
-  user_data = file("../scripts/install_jenkins.sh")
-
-  tags = {
-    Name = var.project_name != "" ? "${var.project_name}-Jenkins-Server" : "Jenkins-Server"
-  }
-
-  volume_tags = {
-    Name = var.project_name != "" ? "${var.project_name}-Jenkins-Server" : "Jenkins-Server"
-  }
-}
-
 # Define Jira Server inside the private subnet
 resource "aws_instance" "jira" {
   depends_on    = ["aws_db_instance.jira"]

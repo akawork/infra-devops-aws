@@ -17,6 +17,6 @@ resource "aws_eip" "nginx" {
 }
 
 resource "aws_eip_association" "eip_assoc_nginx" {
-  instance_id   = aws_instance.nginx.id
+  instance_id   = module.nginx.instance_id
   allocation_id = aws_eip.nginx.id
 }

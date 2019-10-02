@@ -275,7 +275,7 @@ variable "jira_username" {
 
 variable "jira_password" {
   description = "Please enter password for jira DB"
-  default = "DevOps365"
+  default     = "DevOps365"
 }
 
 ## Confluence
@@ -321,7 +321,7 @@ variable "confluence_username" {
 
 variable "confluence_password" {
   description = "Please enter password for jira DB"
-  default = "DevOps365"
+  default     = "DevOps365"
 }
 
 ######################################################

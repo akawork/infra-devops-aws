@@ -1,15 +1,14 @@
 # Define OpenLDAP Server inside the private subnet
 resource "aws_instance" "openldap" {
-  ami           = var.amis[var.region]
-  instance_type = "t2.micro"
-  key_name      = aws_key_pair.internal.id
+  ami           = var.ami
+  instance_type = var.instance_type
+  key_name      = var.key_pair
+  #  user_data = "${file("./scripts/install_openldap.sh")}"
 
   network_interface {
-    network_interface_id = aws_network_interface.openldap.id
+    network_interface_id = var.network_interface
     device_index         = 0
   }
-
-  #  user_data = "${file("./scripts/install_openldap.sh")}"
 
   tags = {
     Name = var.project_name != "" ? "${var.project_name}-OpenLDAP-Server" : "OpenLDAP-Server"

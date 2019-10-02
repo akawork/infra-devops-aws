@@ -12,7 +12,7 @@ data "template_file" "sonar_properties" {
 }
 
 # Nexus
-data "template_file" "nexus_properties" {
+data "template_file" "nexus_install" {
   template = file("../scripts/install_nexus.sh.tpl")
 
   vars = {

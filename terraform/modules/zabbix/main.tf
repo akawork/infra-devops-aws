@@ -1,11 +1,11 @@
 # Define Zabbix Server inside the private subnet
 resource "aws_instance" "zabbix" {
-  ami           = var.amis[var.region]
-  instance_type = "t2.micro"
-  key_name      = aws_key_pair.internal.id
+  ami           = var.ami
+  instance_type = var.instance_type
+  key_name      = var.key_pair
 
   network_interface {
-    network_interface_id = aws_network_interface.zabbix.id
+    network_interface_id = var.network_interface
     device_index         = 0
   }
 

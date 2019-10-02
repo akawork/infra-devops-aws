@@ -1,7 +1,7 @@
 output "instance_id" {
-  value = aws_instance.jenkins.id
+  value = aws_instance.nexus.id
 }
 
 output "private_ip" {
-  value = aws_instance.jenkins.private_ip
+  value = aws_instance.nexus.private_ip
 }

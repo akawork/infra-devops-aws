@@ -9,6 +9,11 @@ variable "project_name" {
   description = "Project Name or System Name"
 }
 
+variable "grafana_config" {
+  type        = string
+  description = "Grafana Configuration files"
+}
+
 variable "instance_type" {
   type        = string
   description = "Instance type"

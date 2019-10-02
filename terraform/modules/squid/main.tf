@@ -15,12 +15,12 @@ resource "aws_instance" "squid" {
     source      = var.squid_config
     destination = "/tmp/"
     connection {
-      user                = "ec2-user"
+      user                = var.remote_user
       host                = aws_instance.squid.private_ip
-      private_key         = file(var.internal_private_key_path)
-      bastion_host        = aws_instance.bastion-server.public_ip
-      bastion_host_key    = file(var.bastion_key_path)
-      bastion_private_key = file(var.bastion_private_key_path)
+      private_key         = file(var.private_key)
+      bastion_host        = var.bastion_host
+      bastion_host_key    = file(var.bastion_host_key)
+      bastion_private_key = file(var.bastion_private_key)
     }
   }
 

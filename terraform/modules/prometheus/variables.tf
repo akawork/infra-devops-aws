@@ -29,6 +29,11 @@ variable "install_script" {
   description = "Install jenkins script"
 }
 
+variable "prometheus_config" {
+  type        = string
+  description = "Prometheus configuration"
+}
+
 variable "bastion_host" {
   type        = string
   description = "Bastion Host IP for install jenkins in Local network"

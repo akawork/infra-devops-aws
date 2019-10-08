@@ -2,8 +2,8 @@
 /terraform/.terraform/**
 
 # .tfstate files
-/terraform/*.tfstate
-/terraform/*.tfstate.*
+*.tfstate
+*.tfstate.*
 
 # .tfvars files
 /terraform/*.tfvars

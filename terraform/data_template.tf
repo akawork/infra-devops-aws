@@ -63,6 +63,7 @@ resource "template_dir" "nginx_conf" {
     jira_domain_name       = aws_route53_record.jira.name
     confluence_domain_name = aws_route53_record.confluence.name
     monitor_domain_name    = aws_route53_record.monitor.name
+    bitbucket_domain_name  = aws_route53_record.bitbucket.name
     monitor_ip             = var.grafana_ip
     jenkins_ip             = var.jenkins_ip
     sonar_ip               = var.sonar_ip
@@ -70,6 +71,7 @@ resource "template_dir" "nginx_conf" {
     gitlab_ip              = var.gitlab_ip
     jira_ip                = var.jira_ip
     confluence_ip          = var.confluence_ip
+    bitbucket_ip           = var.bitbucket_ip
   }
 }
 
@@ -97,6 +99,28 @@ resource "template_dir" "gitlab_config" {
     db_username = var.gitlab_username
     git_domain  = aws_route53_record.gitlab.name
     git_url     = "http://${aws_route53_record.gitlab.name}"
+  }
+}
+
+# Bitbucket
+data "template_file" "bitbucket_install" {
+  template = file("../scripts/install_bitbucket.sh.tpl")
+
+  vars = {
+    bitbucket_version = var.bitbucket_version
+  }
+}
+
+resource "template_dir" "bitbucket_config" {
+  source_dir      = "../configs/bitbucket/"
+  destination_dir = "../configs/bitbucket/conf.render/"
+
+  vars = {
+    db_endpoint = module.bitbucket.db_endpoint
+    db_name     = var.bitbucket_db_name
+    db_password = var.bitbucket_password
+    db_username = var.bitbucket_username
+    domain_name = aws_route53_record.bitbucket.name
   }
 }
 

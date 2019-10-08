@@ -105,8 +105,8 @@ resource "aws_instance" "bastion-server" {
 #   config_script     = data.template_file.bastion_config.rendered
 # }
 
-module "nat_instance" {
-  source = "./modules/nat_instance"
+# module "nat_instance" {
+#   source = "./modules/nat_instance"
 
   ami               = var.ami_nat_id == null ? data.aws_ami.amzn2_nat.image_id : var.ami_nat_id
   instance_type     = "t2.micro"
@@ -319,4 +319,32 @@ module "gitlab" {
   db_name              = var.gitlab_db_name
   db_username          = var.gitlab_username
   db_password          = var.gitlab_password
+}
+
+module "bitbucket" {
+  source = "./modules/bitbucket"
+
+  ami                 = var.amis[var.region]
+  instance_type       = "t2.medium"
+  key_pair            = aws_key_pair.internal.id
+  project_name        = var.project_name
+  network_interface   = aws_network_interface.bitbucket.id
+  install_script      = data.template_file.bitbucket_install.rendered
+  # java_installer            = "../tools/jdk1.8/"
+  bitbucket_config     = template_dir.bitbucket_config.destination_dir
+  bastion_host         = aws_instance.bastion-server.public_ip
+  bastion_host_key     = var.bastion_key_path
+  bastion_private_key  = var.bastion_private_key_path
+  private_key          = var.internal_private_key_path
+  remote_user          = "ec2-user"
+  db_identifier        = var.project_name != "" ? lower("${var.project_name}-${var.bitbucket_identifier}") : var.bitbucket_identifier
+  db_allocated_storage = var.bitbucket_storage
+  db_engine            = var.bitbucket_engine
+  db_engine_version    = lookup(var.bitbucket_engine_version, var.bitbucket_engine)
+  db_instance_class    = var.bitbucket_instance_class
+  db_name              = var.bitbucket_db_name
+  db_username          = var.bitbucket_username
+  db_password          = var.bitbucket_password
+  db_security_group    = aws_security_group.sgdb
+  db_subnet_group_name = aws_db_subnet_group.db_subnet_group.id
 }

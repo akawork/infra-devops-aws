@@ -97,7 +97,7 @@ resource "aws_network_interface" "jenkins" {
 # Define network interface for Sonar Server
 resource "aws_network_interface" "sonar" {
   subnet_id         = aws_subnet.application1-subnet.id
-  private_ips       = ["10.15.2.13"]
+  private_ips       = [var.sonar_ip]
   security_groups   = [aws_security_group.sgsonar.id]
   source_dest_check = false
 

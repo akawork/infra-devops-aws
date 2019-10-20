@@ -1,26 +1,3 @@
-# Define Sonarqube Server inside the private subnet
-resource "aws_instance" "sonarqube" {
-  depends_on    = ["aws_db_instance.sonarqube"]
-  ami           = var.amis[var.region]
-  instance_type = "t2.medium"
-  key_name      = aws_key_pair.internal.id
-
-  network_interface {
-    network_interface_id = aws_network_interface.sonar.id
-    device_index         = 0
-  }
-
-  user_data = data.template_file.sonar_properties.rendered
-
-  tags = {
-    Name = var.project_name != "" ? "${var.project_name}-Sonarqube-Server" : "Sonarqube-Server"
-  }
-
-  volume_tags = {
-    Name = var.project_name != "" ? "${var.project_name}-Sonarqube-Server" : "Sonarqube-Server"
-  }
-}
-
 # Define Jira Server inside the private subnet
 resource "aws_instance" "jira" {
   depends_on    = ["aws_db_instance.jira"]

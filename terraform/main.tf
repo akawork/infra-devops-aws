@@ -201,3 +201,24 @@ module "openldap" {
   project_name      = var.project_name
   network_interface = aws_network_interface.openldap.id
 }
+
+module "sonarqube" {
+  source = "./modules/sonarqube"
+
+  ami                 = var.amis[var.region]
+  instance_type       = "t2.medium"
+  key_pair            = aws_key_pair.internal.id
+  project_name        = var.project_name
+  network_interface   = aws_network_interface.sonar.id
+  install_script      = data.template_file.sonar_properties.rendered
+
+  sgdb                  = aws_security_group.sgdb 
+  db_subnet_group_name  = aws_db_subnet_group.default.id
+  sonar_storage         = var.sonar_storage
+  sonar_engine          = var.sonar_engine
+  sonar_engine_version  = var.sonar_engine_version 
+  sonar_instance_class  = var.sonar_instance_class
+  sonar_db_name         = var.sonar_db_name
+  sonar_username        = var.sonar_username
+  sonar_password        = var.sonar_password
+}

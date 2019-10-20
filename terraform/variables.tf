@@ -403,3 +403,9 @@ variable "prometheus_ip" {
   default     = "10.15.2.203"
   description = "IP of Prometheus"
 }
+
+variable "sonar_ip" {
+  default     = "10.15.2.13"
+  description = "IP of sonar"
+}
+

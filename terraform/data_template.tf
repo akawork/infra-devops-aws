@@ -3,7 +3,7 @@ data "template_file" "sonar_properties" {
   template = file("../scripts/install_sonar.sh.tpl")
 
   vars = {
-    db_endpoint   = aws_db_instance.sonarqube.endpoint
+    db_endpoint   = module.sonarqube.db_endpoint
     db_name       = var.sonar_db_name
     db_password   = var.sonar_password
     db_username   = var.sonar_username

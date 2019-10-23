@@ -62,7 +62,7 @@ resource "template_dir" "nginx_conf" {
     gitlab_domain_name     = aws_route53_record.gitlab.name
     jira_domain_name       = aws_route53_record.jira.name
     confluence_domain_name = aws_route53_record.confluence.name
-    monitor_domain_name = aws_route53_record.monitor.name
+    monitor_domain_name    = aws_route53_record.monitor.name
     monitor_ip             = var.grafana_ip
     jenkins_ip             = var.jenkins_ip
     sonar_ip               = var.sonar_ip

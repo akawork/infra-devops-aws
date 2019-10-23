@@ -28,7 +28,7 @@ variable "az_2" {
 }
 
 variable "domain_name" {
-  default     = "demo.example.com"
+  default     = "demo.akawork.io"
   description = "Your domain name"
 }
 
@@ -329,7 +329,7 @@ variable "confluence_password" {
 ######################################################
 
 variable "nexus_version" {
-  default     = "nexus-3.18.0-01"
+  default     = "nexus-3.19.1-01"
   description = "Version of Nexus Repositpry OSS. https://github.com/sonatype/nexus-public/releases"
 }
 
@@ -384,14 +384,64 @@ variable "squid_port" {
 ##                Default IP Address                ##
 ######################################################
 
+variable "openldap_ip" {
+  default     = "10.15.2.5"
+  description = "IP of OpenLDAP Server"
+}
+
+variable "jira_ip" {
+  default     = "10.15.2.10"
+  description = "IP of Jira Server"
+}
+
+variable "confluence_ip" {
+  default     = "10.15.2.11"
+  description = "IP of Jenkins Server"
+}
+
+variable "jenkins_ip" {
+  default     = "10.15.2.12"
+  description = "IP of Jenkins Server"
+}
+
+variable "sonar_ip" {
+  default     = "10.15.2.13"
+  description = "IP of sonar"
+}
+
+variable "nexus_ip" {
+  default     = "10.15.2.14"
+  description = "IP of Nexus Server"
+}
+
+variable "gitlab_ip" {
+  default     = "10.15.2.15"
+  description = "IP of GitLab Server"
+}
+
+variable "nginx_ip" {
+  default     = "10.15.1.100"
+  description = "IP of NginX Server"
+}
+
 variable "squid_ip" {
   default     = "10.15.1.101"
   description = "IP of Squid Proxy"
 }
 
+variable "nat_ip" {
+  default     = "10.15.1.105"
+  description = "IP of NAT Server"
+}
+
 variable "bastion_ip" {
   default     = "10.15.1.200"
   description = "IP of Bastion Proxy"
+}
+
+variable "zabbix_ip" {
+  default     = "10.15.2.201"
+  description = "IP of Zabbix Server"
 }
 
 variable "grafana_ip" {
@@ -403,9 +453,3 @@ variable "prometheus_ip" {
   default     = "10.15.2.203"
   description = "IP of Prometheus"
 }
-
-variable "sonar_ip" {
-  default     = "10.15.2.13"
-  description = "IP of sonar"
-}
-

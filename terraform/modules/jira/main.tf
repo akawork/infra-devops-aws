@@ -1,6 +1,6 @@
-# Define Sonarqube Server inside the private subnet
-resource "aws_instance" "sonarqube" {
-  depends_on    = [aws_db_instance.sonarqube]
+# Define Jira Server inside the private subnet
+resource "aws_instance" "jira" {
+  depends_on    = ["aws_db_instance.jira"]
   ami           = var.ami
   instance_type = var.instance_type
   key_name      = var.key_pair
@@ -12,16 +12,30 @@ resource "aws_instance" "sonarqube" {
   }
 
   tags = {
-    Name = var.project_name != "" ? "${var.project_name}-Sonarqube-Server" : "Sonarqube-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Jira-Server" : "Jira-Server"
   }
 
   volume_tags = {
-    Name = var.project_name != "" ? "${var.project_name}-Sonarqube-Server" : "Sonarqube-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Jira-Server" : "Jira-Server"
+  }
+
+  # Copies the dbconfig file to jira instance.
+  provisioner "file" {
+    source      = var.config_file
+    destination = "/tmp/"
+    connection {
+      user                = "ec2-user"
+      host                = aws_instance.jira.private_ip
+      private_key         = file(var.private_key)
+      bastion_host        = var.bastion_public_ip
+      bastion_host_key    = file(var.bastion_key)
+      bastion_private_key = file(var.bastion_private_key)
+    }
   }
 }
 
-# Define SonarQube Database
-resource "aws_db_instance" "sonarqube" {
+# Define Jira Database  
+resource "aws_db_instance" "jira" {
   depends_on             = [var.db_security_group]
   identifier             = var.project_name != "" ? lower("${var.project_name}-${var.db_identifier}") : var.db_identifier
   allocated_storage      = var.db_storage

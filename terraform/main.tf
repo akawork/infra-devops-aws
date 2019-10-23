@@ -30,6 +30,13 @@ resource "aws_vpc" "devops" {
   }
 }
 
+# Define Subnet Group for DB
+resource "aws_db_subnet_group" "db_subnet_group" {
+  name        = var.project_name != "" ? lower("${var.project_name}_db_subnet_group") : "db_subnet_group"
+  description = "Group of private subnets"
+  subnet_ids  = [aws_subnet.private1-subnet.id, aws_subnet.private2-subnet.id]
+}
+
 # Define Bastion inside the public subnet
 resource "aws_instance" "bastion-server" {
   ami           = var.amis[var.region]
@@ -205,20 +212,89 @@ module "openldap" {
 module "sonarqube" {
   source = "./modules/sonarqube"
 
-  ami                 = var.amis[var.region]
-  instance_type       = "t2.medium"
-  key_pair            = aws_key_pair.internal.id
-  project_name        = var.project_name
-  network_interface   = aws_network_interface.sonar.id
-  install_script      = data.template_file.sonar_properties.rendered
+  ami                  = var.amis[var.region]
+  instance_type        = "t2.medium"
+  key_pair             = aws_key_pair.internal.id
+  project_name         = var.project_name
+  network_interface    = aws_network_interface.sonar.id
+  install_script       = data.template_file.sonar_properties.rendered
+  db_security_group    = aws_security_group.sgdb
+  db_subnet_group_name = aws_db_subnet_group.db_subnet_group.id
+  db_storage           = var.sonar_storage
+  db_engine            = var.sonar_engine
+  db_engine_version    = var.sonar_engine_version
+  db_instance_class    = var.sonar_instance_class
+  db_name              = var.sonar_db_name
+  db_username          = var.sonar_username
+  db_password          = var.sonar_password
+}
 
-  sgdb                  = aws_security_group.sgdb 
-  db_subnet_group_name  = aws_db_subnet_group.default.id
-  sonar_storage         = var.sonar_storage
-  sonar_engine          = var.sonar_engine
-  sonar_engine_version  = var.sonar_engine_version 
-  sonar_instance_class  = var.sonar_instance_class
-  sonar_db_name         = var.sonar_db_name
-  sonar_username        = var.sonar_username
-  sonar_password        = var.sonar_password
+module "jira" {
+  source = "./modules/jira"
+
+  ami                  = var.amis[var.region]
+  instance_type        = "t2.medium"
+  key_pair             = aws_key_pair.internal.id
+  project_name         = var.project_name
+  network_interface    = aws_network_interface.jira.id
+  install_script       = data.template_file.jira_properties.rendered
+  config_file          = template_dir.jira_config.destination_dir
+  bastion_public_ip    = aws_instance.bastion-server.public_ip
+  private_key          = var.internal_private_key_path
+  bastion_key          = var.bastion_key_path
+  bastion_private_key  = var.bastion_private_key_path
+  db_security_group    = aws_security_group.sgdb
+  db_subnet_group_name = aws_db_subnet_group.db_subnet_group.id
+  db_storage           = var.jira_storage
+  db_engine            = var.jira_engine
+  db_engine_version    = var.jira_engine_version
+  db_instance_class    = var.jira_instance_class
+  db_name              = var.jira_db_name
+  db_username          = var.jira_username
+  db_password          = var.jira_password
+}
+
+module "confluence" {
+  source = "./modules/confluence"
+
+  ami                  = var.amis[var.region]
+  instance_type        = "t2.medium"
+  key_pair             = aws_key_pair.internal.id
+  project_name         = var.project_name
+  network_interface    = aws_network_interface.confluence.id
+  install_script       = data.template_file.confluence_properties.rendered
+  db_security_group    = aws_security_group.sgdb
+  db_subnet_group_name = aws_db_subnet_group.db_subnet_group.id
+  db_storage           = var.confluence_storage
+  db_engine            = var.confluence_engine
+  db_engine_version    = var.confluence_engine_version
+  db_instance_class    = var.confluence_instance_class
+  db_name              = var.confluence_db_name
+  db_username          = var.confluence_username
+  db_password          = var.confluence_password
+}
+
+module "gitlab" {
+  source = "./modules/gitlab"
+
+  ami                  = var.amis[var.region]
+  instance_type        = "t2.medium"
+  key_pair             = aws_key_pair.internal.id
+  project_name         = var.project_name
+  network_interface    = aws_network_interface.gitlab.id
+  install_script       = data.template_file.gitlab_install.rendered
+  config_file          = template_dir.gitlab_config.destination_dir
+  bastion_public_ip    = aws_instance.bastion-server.public_ip
+  private_key          = var.internal_private_key_path
+  bastion_key          = var.bastion_key_path
+  bastion_private_key  = var.bastion_private_key_path
+  db_security_group    = aws_security_group.sgdb
+  db_subnet_group_name = aws_db_subnet_group.db_subnet_group.id
+  db_storage           = var.gitlab_storage
+  db_engine            = var.gitlab_engine
+  db_engine_version    = var.gitlab_engine_version
+  db_instance_class    = var.gitlab_instance_class
+  db_name              = var.gitlab_db_name
+  db_username          = var.gitlab_username
+  db_password          = var.gitlab_password
 }

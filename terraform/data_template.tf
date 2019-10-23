@@ -34,7 +34,7 @@ resource "template_dir" "jira_config" {
   destination_dir = "../configs/jira/conf.render/"
 
   vars = {
-    db_endpoint = aws_db_instance.jira.endpoint
+    db_endpoint = module.jira.db_endpoint
     db_name     = var.jira_db_name
     db_password = var.jira_password
     db_username = var.jira_username
@@ -62,7 +62,14 @@ resource "template_dir" "nginx_conf" {
     gitlab_domain_name     = aws_route53_record.gitlab.name
     jira_domain_name       = aws_route53_record.jira.name
     confluence_domain_name = aws_route53_record.confluence.name
-    monitor_domain_name    = aws_route53_record.monitor.name
+    monitor_domain_name = aws_route53_record.monitor.name
+    monitor_ip             = var.grafana_ip
+    jenkins_ip             = var.jenkins_ip
+    sonar_ip               = var.sonar_ip
+    nexus_ip               = var.nexus_ip
+    gitlab_ip              = var.gitlab_ip
+    jira_ip                = var.jira_ip
+    confluence_ip          = var.confluence_ip
   }
 }
 
@@ -71,7 +78,7 @@ data "template_file" "gitlab_install" {
   template = file("../scripts/install_gitlab.sh.tpl")
 
   vars = {
-    db_endpoint = aws_db_instance.gitlab.endpoint
+    db_endpoint = module.gitlab.db_endpoint
     db_name     = var.gitlab_db_name
     db_password = var.gitlab_password
     db_username = var.gitlab_username
@@ -84,7 +91,7 @@ resource "template_dir" "gitlab_config" {
   destination_dir = "../configs/gitlab/conf.render/"
 
   vars = {
-    db_endpoint = aws_db_instance.gitlab.address
+    db_endpoint = module.gitlab.db_endpoint
     db_name     = var.gitlab_db_name
     db_password = var.gitlab_password
     db_username = var.gitlab_username

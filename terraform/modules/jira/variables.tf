@@ -29,8 +29,13 @@ variable "install_script" {
   description = "Install jenkins script"
 }
 
+variable "config_file" {
+  type        = string
+  description = "Configuration File"
+}
+
 variable "db_identifier" {
-  default     = "sonarqubedb"
+  default     = "jiradb"
   description = "Identifier for your DB"
 }
 
@@ -69,4 +74,24 @@ variable "db_security_group" {
 
 variable "db_subnet_group_name" {
   description = "Subnet group for Database"
+}
+
+variable "bastion_public_ip" {
+  type        = string
+  description = "Bastion Public IP"
+}
+
+variable "private_key" {
+  type        = string
+  description = "Private Key Using for SSH to server"
+}
+
+variable "bastion_key" {
+  type        = string
+  description = "Private Key Using for SSH to server"
+}
+
+variable "bastion_private_key" {
+  type        = string
+  description = "Private Key Using for SSH to server"
 }

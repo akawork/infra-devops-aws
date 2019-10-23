@@ -30,7 +30,7 @@ variable "install_script" {
 }
 
 variable "db_identifier" {
-  default     = "sonarqubedb"
+  default     = "confluencedb"
   description = "Identifier for your DB"
 }
 
@@ -64,7 +64,7 @@ variable "db_password" {
 }
 
 variable "db_security_group" {
-  description = "Security group for Database"
+  description = "Security group ID for Database "
 }
 
 variable "db_subnet_group_name" {

@@ -1,6 +1,6 @@
-# Define Sonarqube Server inside the private subnet
-resource "aws_instance" "sonarqube" {
-  depends_on    = [aws_db_instance.sonarqube]
+# Define Confluence Server inside the private subnet
+resource "aws_instance" "confluence" {
+  depends_on    = [aws_db_instance.confluence]
   ami           = var.ami
   instance_type = var.instance_type
   key_name      = var.key_pair
@@ -12,16 +12,16 @@ resource "aws_instance" "sonarqube" {
   }
 
   tags = {
-    Name = var.project_name != "" ? "${var.project_name}-Sonarqube-Server" : "Sonarqube-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Confluence-Server" : "Confluence-Server"
   }
 
   volume_tags = {
-    Name = var.project_name != "" ? "${var.project_name}-Sonarqube-Server" : "Sonarqube-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Confluence-Server" : "Confluence-Server"
   }
 }
 
-# Define SonarQube Database
-resource "aws_db_instance" "sonarqube" {
+# Define Confluence Database  
+resource "aws_db_instance" "confluence" {
   depends_on             = [var.db_security_group]
   identifier             = var.project_name != "" ? lower("${var.project_name}-${var.db_identifier}") : var.db_identifier
   allocated_storage      = var.db_storage

@@ -13,7 +13,7 @@ resource "aws_network_interface" "bastion" {
 # Define network interface for Nginx Server
 resource "aws_network_interface" "nginx" {
   subnet_id         = aws_subnet.public-subnet.id
-  private_ips       = ["10.15.1.100"]
+  private_ips       = [var.nginx_ip]
   security_groups   = [aws_security_group.sgnginx.id]
   source_dest_check = false
 
@@ -25,7 +25,7 @@ resource "aws_network_interface" "nginx" {
 # Define network interface for NAT Server
 resource "aws_network_interface" "nat_instance" {
   subnet_id         = aws_subnet.public-subnet.id
-  private_ips       = ["10.15.1.105"]
+  private_ips       = [var.nat_ip]
   security_groups   = [aws_security_group.sgnat.id]
   source_dest_check = false
 
@@ -49,7 +49,7 @@ resource "aws_network_interface" "squid" {
 # Define network interface for OpenLDAP Server
 resource "aws_network_interface" "openldap" {
   subnet_id         = aws_subnet.application1-subnet.id
-  private_ips       = ["10.15.2.5"]
+  private_ips       = [var.openldap_ip]
   security_groups   = [aws_security_group.sgopenldap.id]
   source_dest_check = false
 
@@ -61,7 +61,7 @@ resource "aws_network_interface" "openldap" {
 # Define network interface for Jira Server
 resource "aws_network_interface" "jira" {
   subnet_id         = aws_subnet.application1-subnet.id
-  private_ips       = ["10.15.2.10"]
+  private_ips       = [var.jira_ip]
   security_groups   = [aws_security_group.sgjira.id]
   source_dest_check = false
 
@@ -73,7 +73,7 @@ resource "aws_network_interface" "jira" {
 # Define network interface for Confluence Server
 resource "aws_network_interface" "confluence" {
   subnet_id         = aws_subnet.application1-subnet.id
-  private_ips       = ["10.15.2.11"]
+  private_ips       = [var.confluence_ip]
   security_groups   = [aws_security_group.sgconfluence.id]
   source_dest_check = false
 
@@ -85,7 +85,7 @@ resource "aws_network_interface" "confluence" {
 # Define network interface for Jenkins Server
 resource "aws_network_interface" "jenkins" {
   subnet_id         = aws_subnet.application1-subnet.id
-  private_ips       = ["10.15.2.12"]
+  private_ips       = [var.jenkins_ip]
   security_groups   = [aws_security_group.sgjenkins.id]
   source_dest_check = false
 
@@ -109,7 +109,7 @@ resource "aws_network_interface" "sonar" {
 # Define network interface for Nexus Server
 resource "aws_network_interface" "nexus" {
   subnet_id         = aws_subnet.application1-subnet.id
-  private_ips       = ["10.15.2.14"]
+  private_ips       = [var.nexus_ip]
   security_groups   = [aws_security_group.sgnexus.id]
   source_dest_check = false
 
@@ -121,7 +121,7 @@ resource "aws_network_interface" "nexus" {
 # Define network interface for GitLab Server
 resource "aws_network_interface" "gitlab" {
   subnet_id         = aws_subnet.application1-subnet.id
-  private_ips       = ["10.15.2.15"]
+  private_ips       = [var.gitlab_ip]
   security_groups   = [aws_security_group.sggitlab.id]
   source_dest_check = false
 
@@ -133,7 +133,7 @@ resource "aws_network_interface" "gitlab" {
 # Define network interface for Zabbix Server
 resource "aws_network_interface" "zabbix" {
   subnet_id         = aws_subnet.application1-subnet.id
-  private_ips       = ["10.15.2.201"]
+  private_ips       = [var.zabbix_ip]
   security_groups   = [aws_security_group.sgzabbix.id]
   source_dest_check = false
 

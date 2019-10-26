@@ -87,29 +87,15 @@ variable "agent2_subnet_cidr" {
 ######################################################
 
 # Common AMI template using for almost instances
-variable "amis" {
-  type        = "map"
-  description = "Amazon Linux 2 AMI "
-  default = {
-    "us-east-1"      = "ami-0b898040803850657"
-    "us-east-2"      = "ami-0ebbf2179e615c338"
-    "us-west-1"      = "ami-056ee704806822732"
-    "us-west-2"      = "ami-082b5a644766e0e6f"
-    "ap-southeast-1" = "ami-01f7527546b557442"
-  }
+variable "ami_id" {
+  description = "AMI ID for instances"
+  default     = null
 }
 
 # AMI template using for create NAT Instance
-variable "amis_nat" {
-  type        = "map"
-  description = "Amazon Linux AMI "
-  default = {
-    "us-east-1"      = "ami-00a9d4a05375b2763"
-    "us-east-2"      = "ami-00d1f8201864cc10c"
-    "us-west-1"      = "ami-097ad469381034fa2"
-    "us-west-2"      = "ami-0b840e8a1ce4cdf15"
-    "ap-southeast-1" = "ami-01514bb1776d5c018"
-  }
+variable "ami_nat_id" {
+  description = "AMI ID for NAT instance"
+  default     = null
 }
 
 ######################################################

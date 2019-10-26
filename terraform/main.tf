@@ -9,6 +9,28 @@ provider "aws" {
   region                  = var.region
 }
 
+# Get AMI ID for instances
+data "aws_ami" "amzn2" {
+  most_recent = true
+  owners = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-2.0.*-x86_64-gp2"]
+  }
+}
+
+# Get AMI ID for NAT instance
+data "aws_ami" "amzn2_nat" {
+  most_recent = true
+  owners = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amzn-ami-vpc-nat-hvm-*-x86_64-ebs"]
+  }
+}
+
 # Define SSH key pair for our instances
 resource "aws_key_pair" "bastion" {
   key_name   = "bastion-keypair"
@@ -39,7 +61,7 @@ resource "aws_db_subnet_group" "db_subnet_group" {
 
 # Define Bastion inside the public subnet
 resource "aws_instance" "bastion-server" {
-  ami           = var.amis[var.region]
+  ami           = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
   instance_type = "t2.nano"
   key_name      = aws_key_pair.bastion.id
   user_data     = data.template_file.bastion_config.rendered
@@ -72,7 +94,7 @@ resource "aws_instance" "bastion-server" {
 # module "bastion" {
 #   source = "./modules/bastion"
 
-#   ami               = var.amis[var.region]
+#   ami               = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
 #   instance_type     = "t2.micro"
 #   key_pair          = aws_key_pair.bastion.id
 #   project_name      = var.project_name
@@ -86,7 +108,7 @@ resource "aws_instance" "bastion-server" {
 module "nat_instance" {
   source = "./modules/nat_instance"
 
-  ami               = var.amis[var.region]
+  ami               = var.ami_nat_id == null ? data.aws_ami.amzn2_nat.image_id : var.ami_nat_id
   instance_type     = "t2.micro"
   key_pair          = aws_key_pair.internal.id
   project_name      = var.project_name
@@ -96,7 +118,7 @@ module "nat_instance" {
 module "nginx" {
   source = "./modules/nginx"
 
-  ami                 = var.amis[var.region]
+  ami                 = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
   instance_type       = "t2.micro"
   key_pair            = aws_key_pair.internal.id
   project_name        = var.project_name
@@ -114,7 +136,7 @@ module "nginx" {
 module "squid" {
   source = "./modules/squid"
 
-  ami                 = var.amis[var.region]
+  ami                 = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
   instance_type       = "t2.micro"
   key_pair            = aws_key_pair.internal.id
   project_name        = var.project_name
@@ -131,7 +153,7 @@ module "squid" {
 module "jenkins" {
   source = "./modules/jenkins"
 
-  ami                 = var.amis[var.region]
+  ami                 = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
   instance_type       = "t2.micro"
   key_pair            = aws_key_pair.internal.id
   project_name        = var.project_name
@@ -147,8 +169,8 @@ module "jenkins" {
 module "nexus" {
   source = "./modules/nexus"
 
-  ami               = var.amis[var.region]
-  instance_type     = "t2.small"
+  ami               = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
+  instance_type     = "t2.medium"
   key_pair          = aws_key_pair.internal.id
   project_name      = var.project_name
   network_interface = aws_network_interface.nexus.id
@@ -158,7 +180,7 @@ module "nexus" {
 module "prometheus" {
   source = "./modules/prometheus"
 
-  ami                 = var.amis[var.region]
+  ami                 = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
   instance_type       = "t2.micro"
   key_pair            = aws_key_pair.internal.id
   project_name        = var.project_name
@@ -175,7 +197,7 @@ module "prometheus" {
 module "grafana" {
   source = "./modules/grafana"
 
-  ami                 = var.amis[var.region]
+  ami                 = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
   instance_type       = "t2.micro"
   key_pair            = aws_key_pair.internal.id
   project_name        = var.project_name
@@ -192,7 +214,7 @@ module "grafana" {
 module "zabbix" {
   source = "./modules/zabbix"
 
-  ami               = var.amis[var.region]
+  ami               = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
   instance_type     = "t2.micro"
   key_pair          = aws_key_pair.internal.id
   project_name      = var.project_name
@@ -202,7 +224,7 @@ module "zabbix" {
 module "openldap" {
   source = "./modules/openldap"
 
-  ami               = var.amis[var.region]
+  ami               = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
   instance_type     = "t2.micro"
   key_pair          = aws_key_pair.internal.id
   project_name      = var.project_name
@@ -212,7 +234,7 @@ module "openldap" {
 module "sonarqube" {
   source = "./modules/sonarqube"
 
-  ami                  = var.amis[var.region]
+  ami                  = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
   instance_type        = "t2.medium"
   key_pair             = aws_key_pair.internal.id
   project_name         = var.project_name
@@ -232,7 +254,7 @@ module "sonarqube" {
 module "jira" {
   source = "./modules/jira"
 
-  ami                  = var.amis[var.region]
+  ami                  = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
   instance_type        = "t2.medium"
   key_pair             = aws_key_pair.internal.id
   project_name         = var.project_name
@@ -257,7 +279,7 @@ module "jira" {
 module "confluence" {
   source = "./modules/confluence"
 
-  ami                  = var.amis[var.region]
+  ami                  = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
   instance_type        = "t2.medium"
   key_pair             = aws_key_pair.internal.id
   project_name         = var.project_name
@@ -277,7 +299,7 @@ module "confluence" {
 module "gitlab" {
   source = "./modules/gitlab"
 
-  ami                  = var.amis[var.region]
+  ami                  = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
   instance_type        = "t2.medium"
   key_pair             = aws_key_pair.internal.id
   project_name         = var.project_name

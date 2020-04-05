@@ -1,0 +1,32 @@
+[bastion]
+bastion01 ansible_host=
+
+[jira]
+jira01 ansible_host=
+
+[bitbucket]
+bitbucket01 ansible_host=
+
+[confluence]
+confluence01 ansible_host=
+
+[gitlab]
+gitlab01 ansible_host=
+
+[sonarqube]
+sonarqube01 ansible_host=
+
+[jenkins]
+jenkins01 ansible_host=
+
+[nexus-repository]
+nexus-repository01 ansible_host=
+
+[nginx]
+nginx01 ansible_host=
+
+[squid]
+squid01 ansible_host=
+
+[keycloak]
+keycloak01 ansible_host=

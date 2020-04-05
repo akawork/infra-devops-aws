@@ -1,6 +1,8 @@
 # Define Jira Server inside the private subnet
 resource "aws_instance" "jira" {
-  depends_on    = ["aws_db_instance.jira"]
+  depends_on    = [
+    aws_db_instance.jira
+  ]
   ami           = var.ami
   instance_type = var.instance_type
   key_name      = var.key_pair

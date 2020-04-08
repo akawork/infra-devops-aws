@@ -34,6 +34,8 @@ This project buiding on frameworks:
     - [x] Jenkins
     - [x] Nexus Repository
     - [ ] OpenLdap
+  - [ ] Ansible
+    - [ ] Config Ansible Playbook
   - [ ] Lambda function for auto turn-on and turn-off AWS Instances
 
 ## Precondition

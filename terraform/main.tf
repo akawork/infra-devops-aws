@@ -3,7 +3,7 @@
 **/
 
 provider "aws" {
-  version                 = "~> 2.13"
+  version                 = "~> 2.1"
   shared_credentials_file = "~/.aws/credentials"
   profile                 = "default"
   region                  = var.region

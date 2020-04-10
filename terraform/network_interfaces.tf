@@ -165,3 +165,15 @@ resource "aws_network_interface" "prometheus" {
     Name = var.project_name != "" ? "${var.project_name}-Prometheus-Server" : "Prometheus-Server"
   }
 }
+
+# Define network interface for keycloak Server
+resource "aws_network_interface" "keycloak" {
+  subnet_id         = aws_subnet.application1-subnet.id
+  private_ips       = [var.keycloak_ip]
+  security_groups   = [aws_security_group.sgkeycloak.id]
+  source_dest_check = false
+
+  tags = {
+    Name = var.project_name != "" ? "${var.project_name}-Keycloak-Server" : "Keycloak-Server"
+  }
+}

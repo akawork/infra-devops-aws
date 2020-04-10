@@ -796,3 +796,47 @@ resource "aws_security_group" "sgdb" {
   }
 }
 
+resource "aws_security_group" "sgkeycloak" {
+  name        = var.project_name != "" ? "${var.project_name}-Keycloak-SG" : "Keycloak-SG"
+  description = "Securitygroup on Keycloak Server"
+  vpc_id      = aws_vpc.devops.id
+
+  tags = {
+    Name = var.project_name != "" ? "${var.project_name}-Keycloak-Server-SG" : "Keycloak-Server-SG"
+  }
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [
+      var.application1_subnet_cidr,
+      var.application2_subnet_cidr,
+      var.public_subnet_cidr,
+      var.agent1_subnet_cidr,
+      var.agent2_subnet_cidr,
+    ]
+    description = "Allow SSH access on Bastion Server"
+  }
+
+  ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = [
+      var.application1_subnet_cidr,
+      var.application2_subnet_cidr,
+      var.public_subnet_cidr,
+      var.agent1_subnet_cidr,
+      var.agent2_subnet_cidr,
+    ]
+    description = "Allow access keycloak service"
+  }
+  egress {
+   from_port = 0
+   to_port = 0
+   protocol = "-1"
+   cidr_blocks = ["0.0.0.0/0"]
+ }
+
+}
+

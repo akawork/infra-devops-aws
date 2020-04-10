@@ -320,3 +320,29 @@ module "gitlab" {
   db_username          = var.gitlab_username
   db_password          = var.gitlab_password
 }
+
+module "keycloak" {
+  source = "./modules/keycloak"
+  ami                  = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
+  instance_type        = "t2.micro"
+  key_pair             = aws_key_pair.internal.id
+  project_name         = var.project_name
+  network_interface    = aws_network_interface.keycloak.id
+  install_script       = data.template_file.keycloak_install.rendered
+#  config_file          = template_dir.keycloak_config.destination_dir
+  config_file          = null
+  private_key          = var.internal_private_key_path
+  bastion_key          = var.bastion_key_path
+  bastion_private_key  = var.bastion_private_key_path  
+  db_engine_version    = null
+  db_subnet_group_name  = null
+  bastion_public_ip     = null
+  db_storage            = null
+  db_username           = null
+  db_password           = null
+  bastion_key           = null
+  db_instance_class     = null
+  db_name               = null
+  db_security_group     = null
+
+}

@@ -439,3 +439,8 @@ variable "prometheus_ip" {
   default     = "10.15.2.203"
   description = "IP of Prometheus"
 }
+
+variable "keycloak_ip" {
+  default     = "10.15.2.204"
+  description = "IP of Keycloak Server"
+}

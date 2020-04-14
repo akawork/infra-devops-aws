@@ -181,16 +181,3 @@ data "template_file" "keycloak_install" {
   template = file("../scripts/install_keycloak.sh.tpl")
 
 }
-
-# defile config-file path de for copying to EC2 machine from local
-# resource "template_dir" "keycloak_config" {
-#   source_dir      = "../configs/keycloak/"
-#   destination_dir = "../configs/keycloak/conf.render/"
-
-#   # vars = {
-#   #   db_endpoint = module.keycloak.db_endpoint
-#   #   db_name     = var.keycloak_db_name
-#   #   db_password = var.keycloak_password
-#   #   db_username = var.keycloak_username
-#   # }
-# }

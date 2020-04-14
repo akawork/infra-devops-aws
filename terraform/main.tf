@@ -344,5 +344,4 @@ module "keycloak" {
   db_instance_class     = null
   db_name               = null
   db_security_group     = null
-
 }

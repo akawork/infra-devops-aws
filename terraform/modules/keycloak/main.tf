@@ -19,7 +19,7 @@ resource "aws_instance" "keycloak" {
   }
 #   provisioner "file" {
 #   #  source      = var.config_file
-#     source      = "/tmp/test.txt"  
+#     source      = "/tmp/test.conf"  
 #     destination = "/tmp/"
 #     connection {
 #       user                = "ec2-user"
@@ -30,7 +30,4 @@ resource "aws_instance" "keycloak" {
 #       bastion_private_key = file(var.bastion_private_key)
 #     }
 #   }
-
 }
-
-

@@ -179,5 +179,4 @@ resource "template_dir" "grafana_config" {
 # Keycloak
 data "template_file" "keycloak_install" {
   template = file("../scripts/install_keycloak.sh.tpl")
-
 }

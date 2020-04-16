@@ -26,7 +26,7 @@ variable "network_interface" {
 
 variable "install_script" {
   type        = string
-  description = "Install jenkins script"
+  description = "Install keycloak script"
 }
 
 variable "config_file" {
@@ -65,7 +65,7 @@ variable "db_username" {
 }
 
 variable "db_password" {
-  description = "Please enter password for SonarQube DB"
+  description = "Please enter password for DB"
 }
 
 variable "db_security_group" {

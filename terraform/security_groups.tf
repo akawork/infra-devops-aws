@@ -808,13 +808,7 @@ resource "aws_security_group" "sgkeycloak" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [
-      var.application1_subnet_cidr,
-      var.application2_subnet_cidr,
-      var.public_subnet_cidr,
-      var.agent1_subnet_cidr,
-      var.agent2_subnet_cidr,
-    ]
+    cidr_blocks = ["${var.bastion_ip}/32"]
     description = "Allow SSH access on Bastion Server"
   }
 
@@ -822,14 +816,8 @@ resource "aws_security_group" "sgkeycloak" {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
-    cidr_blocks = [
-      var.application1_subnet_cidr,
-      var.application2_subnet_cidr,
-      var.public_subnet_cidr,
-      var.agent1_subnet_cidr,
-      var.agent2_subnet_cidr,
-    ]
-    description = "Allow access keycloak service"
+    cidr_blocks = ["${var.nginx_ip}/32"]
+    description = "Allow access keycloak service from nginx"
   }
   egress {
    from_port = 0

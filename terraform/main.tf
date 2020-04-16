@@ -329,7 +329,6 @@ module "keycloak" {
   project_name         = var.project_name
   network_interface    = aws_network_interface.keycloak.id
   install_script       = data.template_file.keycloak_install.rendered
-#  config_file          = template_dir.keycloak_config.destination_dir
   config_file          = null
   private_key          = var.internal_private_key_path
   bastion_key          = var.bastion_key_path

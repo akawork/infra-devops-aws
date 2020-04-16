@@ -339,7 +339,6 @@ module "keycloak" {
   db_storage            = null
   db_username           = null
   db_password           = null
-  bastion_key           = null
   db_instance_class     = null
   db_name               = null
   db_security_group     = null

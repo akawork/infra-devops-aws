@@ -180,3 +180,17 @@ resource "template_dir" "grafana_config" {
 data "template_file" "keycloak_install" {
   template = file("../scripts/install_keycloak.sh.tpl")
 }
+
+resource "template_dir" "keycloak_config" {
+  source_dir      = "../configs/keycloak/script"
+  destination_dir = "../configs/keycloak/script/conf.render/"
+  vars = {
+    db_endpoint = module.keycloak.db_endpoint
+    db_name     = var.keycloak_db_name
+    db_password = var.keycloak_password
+    db_username = var.keycloak_username
+    private_ip  = var.keycloak_ip
+    keycloak_domain  = aws_route53_record.keycloak.name
+    keycloak_url     = "http://${aws_route53_record.keycloak.name}"
+  }
+}

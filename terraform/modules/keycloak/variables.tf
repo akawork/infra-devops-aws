@@ -35,7 +35,7 @@ variable "config_file" {
 }
 
 variable "db_identifier" {
-  default     = "jiradb"
+  default     = "keycloakdb"
   description = "Identifier for your DB"
 }
 

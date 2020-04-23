@@ -310,6 +310,51 @@ variable "confluence_password" {
   default     = "DevOps365"
 }
 
+#Keycloak
+variable "keycloak_storage" {
+default = "10"
+description = "Storage size in GB"
+}
+
+
+variable "keycloak_engine" {
+default = "postgres"
+description = "Engine type, example values mysql, postgres"
+}
+
+
+variable "keycloak_engine_version" {
+description = "Engine version"
+
+default = {
+mysql = "5.7.21"
+postgres = "10.4"
+}
+}
+
+variable "keycloak_instance_class" {
+default = "db.t2.micro"
+description = "Instance class"
+}
+
+variable "keycloak_db_name" {
+default = "keycloak"
+description = "db name"
+}
+
+variable "keycloak_username" {
+default = "keycloak"
+description = "User name"
+}
+
+variable "keycloak_password" {
+description = "Please enter password for GitLab DB"
+default = "DevOps365"
+}
+
+
+
+
 ######################################################
 ##                    Packages                      ##
 ######################################################

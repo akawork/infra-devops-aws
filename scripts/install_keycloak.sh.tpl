@@ -9,13 +9,13 @@ function install_keycloak {
     sudo yum -y install java-1.8.0-openjdk.x86_64 wget
 
     # pull Repository information 
-    cd /home/ec2-user
+    cd /opt
     wget https://downloads.jboss.org/keycloak/9.0.2/keycloak-9.0.2.tar.gz
     #extract
     tar -xzvf keycloak-9.0.2.tar.gz
     mv keycloak-9.0.2 keycloak
     #change to keycloak directory ( keycloak_home)
-    cd /home/ec2-user/keycloak
+    cd /opt/keycloak
     #config keycloak as service
     export keycloak_home=`pwd`
     sudo mkdir -p /etc/keycloak
@@ -51,8 +51,26 @@ EOF
 
     # create pid directory
     sudo mkdir -p /var/run/keycloak
-#    sudo chown ec2-user.ec2-user /var/run/keycloak
+    #Install jdbc driver
+    #change to keycloak directory ( keycloak_home)
+    cd /opt/keycloak
+    #config keycloak as service
+    export keycloak_home=`pwd`
+    #download jdbc driver
+    mkdir -p $keycloak_home/modules/system/layers/keycloak/org/postgresql/main
+    cd $keycloak_home/modules/system/layers/keycloak/org/postgresql/main
+    wget https://jdbc.postgresql.org/download/postgresql-42.2.11.jar
+    #cai dat module
+    cp -rf /tmp/keycloak/module.xml .
 
+    # cau hinh standalone.xml
+    cd /tmp
+    chmod 755 /tmp/change_parameter.sh
+    sh /tmp/change_parameter.sh
+    
+    #copy config
+    sudo cp -rf /tmp/keycloak/standalone.xml $keycloak_home/standalone/configuration/
+    
     # Active service
     sudo systemctl daemon-reload
     sudo systemctl enable keycloak

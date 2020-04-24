@@ -58,3 +58,11 @@ resource "aws_route53_record" "monitor" {
   ttl     = "300"
   records = [aws_eip.nginx.public_ip]
 }
+
+resource "aws_route53_record" "keycloak" {
+  zone_id = data.aws_route53_zone.default.zone_id
+  name    = "keycloak.${data.aws_route53_zone.default.name}"
+  type    = "A"
+  ttl     = "300"
+  records = [aws_eip.nginx.public_ip]
+}

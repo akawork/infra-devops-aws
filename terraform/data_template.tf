@@ -63,6 +63,8 @@ resource "template_dir" "nginx_conf" {
     jira_domain_name       = aws_route53_record.jira.name
     confluence_domain_name = aws_route53_record.confluence.name
     monitor_domain_name    = aws_route53_record.monitor.name
+    keycloak_domain_name   = aws_route53_record.keycloak.name
+
     monitor_ip             = var.grafana_ip
     jenkins_ip             = var.jenkins_ip
     sonar_ip               = var.sonar_ip
@@ -70,6 +72,7 @@ resource "template_dir" "nginx_conf" {
     gitlab_ip              = var.gitlab_ip
     jira_ip                = var.jira_ip
     confluence_ip          = var.confluence_ip
+    keycloak_ip            = var.keycloak_ip
   }
 }
 
@@ -170,5 +173,24 @@ resource "template_dir" "grafana_config" {
 
   vars = {
     prometheus_url = "http://${var.prometheus_ip}:9090"
+  }
+}
+
+# Keycloak
+data "template_file" "keycloak_install" {
+  template = file("../scripts/install_keycloak.sh.tpl")
+}
+
+resource "template_dir" "keycloak_config" {
+  source_dir      = "../configs/keycloak/script"
+  destination_dir = "../configs/keycloak/script/conf.render/"
+  vars = {
+    db_endpoint = module.keycloak.db_endpoint
+    db_name     = var.keycloak_db_name
+    db_password = var.keycloak_password
+    db_username = var.keycloak_username
+    private_ip  = var.keycloak_ip
+    keycloak_domain  = aws_route53_record.keycloak.name
+    keycloak_url     = "http://${aws_route53_record.keycloak.name}"
   }
 }

@@ -130,6 +130,18 @@ resource "aws_network_interface" "gitlab" {
   }
 }
 
+# Define network interface for Bitbucket Server
+resource "aws_network_interface" "bitbucket" {
+  subnet_id         = aws_subnet.application1-subnet.id
+  private_ips       = [var.bitbucket_ip]
+  security_groups   = [aws_security_group.sgbitbucket.id]
+  source_dest_check = false
+
+  tags = {
+    Name = var.project_name != "" ? "${var.project_name}-Bitbucket-Server" : "Bitbucket-Server"
+  }
+}
+
 # Define network interface for Zabbix Server
 resource "aws_network_interface" "zabbix" {
   subnet_id         = aws_subnet.application1-subnet.id

@@ -265,7 +265,6 @@ variable "jira_password" {
 }
 
 ## Confluence
-
 variable "confluence_identifier" {
   default     = "confluence"
   description = "Identifier for your DB"
@@ -310,6 +309,51 @@ variable "confluence_password" {
   default     = "DevOps365"
 }
 
+## Bitbucket DB
+variable "bitbucket_identifier" {
+  default     = "bitbucket"
+  description = "Identifier for your DB"
+}
+
+variable "bitbucket_storage" {
+  default     = "10"
+  description = "Storage size in GB"
+}
+
+variable "bitbucket_engine" {
+  default     = "postgres"
+  description = "Engine type, example values mysql, postgres"
+}
+
+variable "bitbucket_engine_version" {
+  description = "Engine version"
+
+  default = {
+    mysql    = "5.7.21"
+    postgres = "9.6.8"
+  }
+}
+
+variable "bitbucket_instance_class" {
+  default     = "db.t2.micro"
+  description = "Instance class"
+}
+
+variable "bitbucket_db_name" {
+  default     = "bitbucket"
+  description = "Database name"
+}
+
+variable "bitbucket_username" {
+  default     = "bitbucket"
+  description = "User name"
+}
+
+variable "bitbucket_password" {
+  description = "Please enter password for Bitbucket DB"
+  default     = "DevOps365"
+}
+
 ######################################################
 ##                    Packages                      ##
 ######################################################
@@ -342,6 +386,11 @@ variable "prometheus_version" {
 variable "grafana_version" {
   default     = "grafana-6.3.2-1"
   description = "Version of Grafana. https://grafana.com/grafana/download"
+}
+
+variable "bitbucket_version" {
+  default     = "atlassian-bitbucket-7.1.2"
+  description = "Version of Bitbucket. https://bitbucket.org/product/download/"
 }
 
 ######################################################
@@ -403,6 +452,11 @@ variable "nexus_ip" {
 variable "gitlab_ip" {
   default     = "10.15.2.15"
   description = "IP of GitLab Server"
+}
+
+variable "bitbucket_ip" {
+  default     = "10.15.2.16"
+  description = "IP of Bitbucket Server"
 }
 
 variable "nginx_ip" {

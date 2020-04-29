@@ -590,6 +590,61 @@ resource "aws_security_group" "sgconfluence" {
   }
 }
 
+# Define the security group for Bitbucket
+resource "aws_security_group" "sgbitbucket" {
+  name        = var.project_name != "" ? "${var.project_name}-Bitbucket-SG" : "Bitbucket-SG"
+  description = "Allow incoming HTTP connections & SSH access"
+  vpc_id      = aws_vpc.devops.id
+
+  tags = {
+    Name = var.project_name != "" ? "${var.project_name}-Bitbucket-Server-SG" : "Bitbucket-Server-SG"
+  }
+
+  ingress {
+    from_port   = 7990
+    to_port     = 7990
+    protocol    = "tcp"
+    cidr_blocks = ["${module.nginx.private_ip}/32"]
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["${var.bastion_ip}/32"]
+  }
+
+  egress {
+    from_port = 32768
+    to_port   = 65535
+    protocol  = "tcp"
+    cidr_blocks = [
+      "${module.nginx.private_ip}/32",
+      "${var.bastion_ip}/32",
+    ]
+    description = "Allow response port from Bitbucket Server to another server"
+  }
+
+  egress {
+    from_port = 5432
+    to_port   = 5432
+    protocol  = "tcp"
+    cidr_blocks = [
+      var.private1_subnet_cidr,
+      var.private2_subnet_cidr,
+    ]
+    description = "Allow response port from Bitbucket Server to another server"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Used to download packages"
+  }
+}
+
 # Define the security group for OpenLDAP
 resource "aws_security_group" "sgopenldap" {
   name        = "DevOps_OpenLDAP_SG"

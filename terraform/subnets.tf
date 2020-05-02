@@ -75,3 +75,10 @@ resource "aws_subnet" "agent2-subnet" {
     Name = var.project_name != "" ? "${var.project_name}-Agent2-Subnet" : "Agent2-Subnet"
   }
 }
+
+# Define Subnet Group for DB
+resource "aws_db_subnet_group" "db_subnet_group" {
+  name        = var.project_name != "" ? lower("${var.project_name}_db_subnet_group") : "db_subnet_group"
+  description = "Group of private subnets"
+  subnet_ids  = [aws_subnet.private1-subnet.id, aws_subnet.private2-subnet.id]
+}

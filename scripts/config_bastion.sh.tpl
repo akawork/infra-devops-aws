@@ -9,12 +9,12 @@ function config_proxy {
 }
 
 function install_tools {
-    yum update -y && yum install -y nc htop >> $LOG_INSTALL
+    sudo yum update -y && sudo yum install -y nc htop >> $LOG_INSTALL
 }
 
 function config_ssh_key {
-    echo "Set permission for ${internal_ssh_key}" >> $LOG_INSTALL
-    chmod -R 400 /home/ec2-user/${internal_ssh_key}
+    echo "Set permission for ${internal_ssh_key_name}" >> $LOG_INSTALL
+    chmod -R 400 /home/${remote_user}/${internal_ssh_key_name}
 }
 
 function check_internet_connect {
@@ -40,7 +40,10 @@ function main {
         config_ssh_key
         echo "[SUCCESS] Configuration SSH key complete!"  >> $LOG_INSTALL
         install_tools
-        echo "[SUCCESS] Install tools complete!"  >> $LOG_INSTALL
+        if [[ $? == 0 ]]; 
+        then
+            echo "[SUCCESS] Install tools complete!"  >> $LOG_INSTALL
+        fi
     else
         echo "[ERROR] This operating system is not supported."  >> $LOG_INSTALL
     fi

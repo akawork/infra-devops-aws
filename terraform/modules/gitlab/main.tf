@@ -4,10 +4,11 @@ resource "aws_instance" "gitlab" {
   ami           = var.ami
   instance_type = var.instance_type
   key_name      = var.key_pair
-  user_data     = var.install_script
+  user_data     = data.template_file.gitlab_install[0].rendered
+  count         = var.enable == "true" ? 1 : 0
 
   network_interface {
-    network_interface_id = var.network_interface
+    network_interface_id = aws_network_interface.gitlab[0].id
     device_index         = 0
   }
 
@@ -21,11 +22,11 @@ resource "aws_instance" "gitlab" {
 
   # Copies the gitlab file to /etc/gitlab.
   provisioner "file" {
-    source      = var.config_file
+    source      = template_dir.gitlab_config[0].destination_dir
     destination = "/tmp/"
     connection {
       user                = "ec2-user"
-      host                = aws_instance.gitlab.private_ip
+      host                = aws_instance.gitlab[0].private_ip
       private_key         = file(var.private_key)
       bastion_host        = var.bastion_public_ip
       bastion_host_key    = file(var.bastion_key)
@@ -49,4 +50,114 @@ resource "aws_db_instance" "gitlab" {
   db_subnet_group_name   = var.db_subnet_group_name
   skip_final_snapshot    = true
   apply_immediately      = true
+  count                  = var.enable == "true" ? 1 : 0
+}
+
+resource "aws_route53_record" "gitlab" {
+  zone_id = var.route53_zone_id
+  name    = "gitlab.${var.route53_name}"
+  type    = "A"
+  ttl     = "300"
+  records = [var.nginx_public_ip]
+  count   = var.enable == "true" ? 1 : 0
+}
+
+# Define network interface for GitLab Server
+resource "aws_network_interface" "gitlab" {
+  subnet_id         = var.subnet_id
+  private_ips       = [var.ip_address]
+  security_groups   = [aws_security_group.sggitlab[0].id]
+  source_dest_check = false
+  count             = var.enable == "true" ? 1 : 0
+
+  tags = {
+    Name = var.project_name != "" ? "${var.project_name}-GitLab-Server" : "GitLab-Server"
+  }
+}
+
+
+# Define the security group for GitLab
+resource "aws_security_group" "sggitlab" {
+  name        = var.project_name != "" ? "${var.project_name}-GitLab-SG" : "GitLab-SG"
+  description = "Allow incoming HTTP connections & SSH access"
+  vpc_id      = var.vpc_id
+  count       = var.enable == "true" ? 1 : 0
+
+  tags = {
+    Name = var.project_name != "" ? "${var.project_name}-GitLab-Server-SG" : "GitLab-Server-SG"
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["${var.nginx_private_ip}/32"]
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["${var.bastion_private_ip}/32"]
+  }
+
+  egress {
+    from_port = 32768
+    to_port   = 65535
+    protocol  = "tcp"
+    cidr_blocks = [
+      "${var.nginx_private_ip}/32",
+      "${var.bastion_private_ip}/32",
+    ]
+    description = "Allow response port from Nexus Server to another server"
+  }
+
+  egress {
+    from_port = 5432
+    to_port   = 5432
+    protocol  = "tcp"
+    cidr_blocks = [
+      var.private1_subnet_cidr,
+      var.private2_subnet_cidr,
+    ]
+    description = "Allow response port from Nexus Server to another server"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Used to download packages"
+  }
+}
+
+
+# Gitlab
+data "template_file" "gitlab_install" {
+  template = file("../scripts/install_gitlab.sh.tpl")
+  count    = var.enable == "true" ? 1 : 0
+
+  vars = {
+    db_endpoint = aws_db_instance.gitlab[0].endpoint
+    db_name     = var.db_name
+    db_password = var.db_password
+    db_username = var.db_username
+    git_domain  = aws_route53_record.gitlab[0].name
+  }
+}
+
+resource "template_dir" "gitlab_config" {
+  source_dir      = "../configs/gitlab/"
+  destination_dir = "../configs/gitlab/conf.render/"
+  count           = var.enable == "true" ? 1 : 0
+
+  vars = {
+    db_endpoint = aws_db_instance.gitlab[0].endpoint
+    db_name     = var.db_name
+    db_password = var.db_password
+    db_username = var.db_username
+    git_domain  = aws_route53_record.gitlab[0].name
+    git_url     = "http://${aws_route53_record.gitlab[0].name}"
+  }
 }

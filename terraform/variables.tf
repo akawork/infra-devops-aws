@@ -12,23 +12,23 @@ variable "project_name" {
 # Region variable
 variable "region" {
   description = "Region for the the system"
-  default     = "us-east-2"
+  default     = "us-west-1"
 }
 
 # Define Availability Zone
 
 variable "az_1" {
-  default     = "us-east-2a"
+  default     = "us-west-1a"
   description = "First Availability Zone"
 }
 
 variable "az_2" {
-  default     = "us-east-2b"
+  default     = "us-west-1b"
   description = "Second Availability Zone"
 }
 
 variable "domain_name" {
-  default     = "demo.akawork.io"
+  default     = "demo1.akawork.io"
   description = "Your domain name"
 }
 
@@ -438,4 +438,63 @@ variable "grafana_ip" {
 variable "prometheus_ip" {
   default     = "10.15.2.203"
   description = "IP of Prometheus"
+}
+
+######################################################
+##                     Component                    ##
+######################################################
+
+variable "bitbucket_enable" {
+  description = "Use Bitbucket service as version control system"
+  default     = "true"
+}
+
+variable "confluence_enable" {
+  description = "Use Confluence service to collaborate and share knowledge with your team"
+  default     = "true"
+}
+
+variable "gitlab_enable" {
+  description = "Use Gitlab service"
+  default     = "true"
+}
+
+variable "grafana_enable" {
+  description = "Use Grafana service to visualize metrics"
+  default     = "true"
+}
+
+variable "jenkins_enable" {
+  description = "Use Jenkins service"
+  default     = "true"
+}
+
+variable "jira_enable" {
+  description = "Use Jira service to plan, track, and manage your agile and software development projects"
+  default     = "true"
+}
+
+variable "nexus_enable" {
+  description = "Use Nexus Repository Manager"
+  default     = "true"
+}
+
+variable "openldap_enable" {
+  description = "Use OpenLDAP service, implement LDAP to centralized authentication"
+  default     = "true"
+}
+
+variable "prometheus_enable" {
+  description = "Use Prometheus service to monitoring system and application"
+  default     = "true"
+}
+
+variable "sonarqube_enable" {
+  description = "Use Sonarqube service to scan and analysis source code"
+  default     = "true"
+}
+
+variable "zabix_enable" {
+  description = "Use Zabbix service to monitoring, an alternative monitor solution"
+  default     = "true"
 }

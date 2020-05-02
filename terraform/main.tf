@@ -5,7 +5,7 @@
 provider "aws" {
   version                 = "~> 2.13"
   shared_credentials_file = "~/.aws/credentials"
-  profile                 = "default"
+  profile                 = "mfa"
   region                  = var.region
 }
 
@@ -31,6 +31,12 @@ data "aws_ami" "amzn2_nat" {
   }
 }
 
+# Define domain name
+data "aws_route53_zone" "default" {
+  name         = var.domain_name
+  private_zone = false
+}
+
 # Define SSH key pair for our instances
 resource "aws_key_pair" "bastion" {
   key_name   = "bastion-keypair"
@@ -52,228 +58,32 @@ resource "aws_vpc" "devops" {
   }
 }
 
-# Define Subnet Group for DB
-resource "aws_db_subnet_group" "db_subnet_group" {
-  name        = var.project_name != "" ? lower("${var.project_name}_db_subnet_group") : "db_subnet_group"
-  description = "Group of private subnets"
-  subnet_ids  = [aws_subnet.private1-subnet.id, aws_subnet.private2-subnet.id]
-}
+module "bastion" {
+  source = "./modules/bastion"
 
-# Define Bastion inside the public subnet
-resource "aws_instance" "bastion-server" {
-  ami           = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
-  instance_type = "t2.nano"
-  key_name      = aws_key_pair.bastion.id
-  user_data     = data.template_file.bastion_config.rendered
+  ami                       = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
+  instance_type             = "t2.micro"
+  key_pair                  = aws_key_pair.bastion.id
+  project_name              = var.project_name
+  
+  internal_private_key_path = var.internal_private_key_path
+  bastion_private_key_path  = var.bastion_private_key_path
+  remote_user               = "ec2-user"
 
-  network_interface {
-    network_interface_id = aws_network_interface.bastion.id
-    device_index         = 0
-  }
+  ip_address                = var.bastion_ip
+  application1_subnet_cidr  = var.application1_subnet_cidr
+  application2_subnet_cidr  = var.application2_subnet_cidr
+  agent1_subnet_cidr        = var.agent1_subnet_cidr
+  agent2_subnet_cidr        = var.agent2_subnet_cidr
+  public_subnet_cidr        = var.public_subnet_cidr
+  subnet_id                 = aws_subnet.public-subnet.id
+  vpc_id                    = aws_vpc.devops.id
 
-  # Copies the internal-key to /home/ec2-user
-  provisioner "file" {
-    source      = "../keypair/internal-key"
-    destination = "/home/ec2-user/internal-key"
-    connection {
-      user        = "ec2-user"
-      host        = self.public_ip
-      private_key = file(var.bastion_private_key_path)
-    }
-  }
-
-  tags = {
-    Name = var.project_name != "" ? "${var.project_name}-Bastion-Server" : "Bastion-Server"
-  }
-
-  volume_tags = {
-    Name = var.project_name != "" ? "${var.project_name}-Bastion-Server" : "Bastion-Server"
-  }
-}
-
-# module "bastion" {
-#   source = "./modules/bastion"
-
-#   ami               = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
-#   instance_type     = "t2.micro"
-#   key_pair          = aws_key_pair.bastion.id
-#   project_name      = var.project_name
-#   network_interface = aws_network_interface.bastion.id
-#   internal_key      = "../keypair/internal-key"
-#   private_key       = var.internal_private_key_path
-#   remote_user       = "ec2-user"
-#   config_script     = data.template_file.bastion_config.rendered
-# }
-
-module "nat_instance" {
-  source = "./modules/nat_instance"
-
-  ami               = var.ami_nat_id == null ? data.aws_ami.amzn2_nat.image_id : var.ami_nat_id
-  instance_type     = "t2.micro"
-  key_pair          = aws_key_pair.internal.id
-  project_name      = var.project_name
-  network_interface = aws_network_interface.nat_instance.id
-}
-
-module "nginx" {
-  source = "./modules/nginx"
-
-  ami                 = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
-  instance_type       = "t2.micro"
-  key_pair            = aws_key_pair.internal.id
-  project_name        = var.project_name
-  nginx_configd       = template_dir.nginx_conf.destination_dir
-  nginx_config        = "../configs/nginx/nginx.conf"
-  network_interface   = aws_network_interface.nginx.id
-  install_script      = "../scripts/install_nginx.sh"
-  bastion_host        = aws_instance.bastion-server.public_ip
-  bastion_host_key    = var.bastion_key_path
-  bastion_private_key = var.bastion_private_key_path
-  private_key         = var.internal_private_key_path
-  remote_user         = "ec2-user"
-}
-
-module "squid" {
-  source = "./modules/squid"
-
-  ami                 = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
-  instance_type       = "t2.micro"
-  key_pair            = aws_key_pair.internal.id
-  project_name        = var.project_name
-  network_interface   = aws_network_interface.squid.id
-  install_script      = data.template_file.squid_install.rendered
-  squid_config        = template_dir.squid_config.destination_dir
-  bastion_host        = aws_instance.bastion-server.public_ip
-  bastion_host_key    = var.bastion_key_path
-  bastion_private_key = var.bastion_private_key_path
-  private_key         = var.internal_private_key_path
-  remote_user         = "ec2-user"
-}
-
-module "jenkins" {
-  source = "./modules/jenkins"
-
-  ami                 = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
-  instance_type       = "t2.micro"
-  key_pair            = aws_key_pair.internal.id
-  project_name        = var.project_name
-  network_interface   = aws_network_interface.jenkins.id
-  install_script      = "../scripts/install_jenkins.sh"
-  bastion_host        = aws_instance.bastion-server.public_ip
-  bastion_host_key    = var.bastion_key_path
-  bastion_private_key = var.bastion_private_key_path
-  private_key         = var.internal_private_key_path
-  remote_user         = "ec2-user"
-}
-
-module "nexus" {
-  source = "./modules/nexus"
-
-  ami               = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
-  instance_type     = "t2.medium"
-  key_pair          = aws_key_pair.internal.id
-  project_name      = var.project_name
-  network_interface = aws_network_interface.nexus.id
-  install_script    = data.template_file.nexus_install.rendered
-}
-
-module "prometheus" {
-  source = "./modules/prometheus"
-
-  ami                 = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
-  instance_type       = "t2.micro"
-  key_pair            = aws_key_pair.internal.id
-  project_name        = var.project_name
-  network_interface   = aws_network_interface.prometheus.id
-  prometheus_config   = template_dir.prometheus_config.destination_dir
-  install_script      = data.template_file.prometheus_install.rendered
-  bastion_host        = aws_instance.bastion-server.public_ip
-  bastion_host_key    = var.bastion_key_path
-  bastion_private_key = var.bastion_private_key_path
-  private_key         = var.internal_private_key_path
-  remote_user         = "ec2-user"
-}
-
-module "grafana" {
-  source = "./modules/grafana"
-
-  ami                 = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
-  instance_type       = "t2.micro"
-  key_pair            = aws_key_pair.internal.id
-  project_name        = var.project_name
-  network_interface   = aws_network_interface.grafana.id
-  install_script      = data.template_file.grafana_install.rendered
-  grafana_config      = template_dir.grafana_config.destination_dir
-  bastion_host        = aws_instance.bastion-server.public_ip
-  bastion_host_key    = var.bastion_key_path
-  bastion_private_key = var.bastion_private_key_path
-  private_key         = var.internal_private_key_path
-  remote_user         = "ec2-user"
-}
-
-module "zabbix" {
-  source = "./modules/zabbix"
-
-  ami               = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
-  instance_type     = "t2.micro"
-  key_pair          = aws_key_pair.internal.id
-  project_name      = var.project_name
-  network_interface = aws_network_interface.zabbix.id
-}
-
-module "openldap" {
-  source = "./modules/openldap"
-
-  ami               = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
-  instance_type     = "t2.micro"
-  key_pair          = aws_key_pair.internal.id
-  project_name      = var.project_name
-  network_interface = aws_network_interface.openldap.id
-}
-
-module "sonarqube" {
-  source = "./modules/sonarqube"
-
-  ami                  = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
-  instance_type        = "t2.medium"
-  key_pair             = aws_key_pair.internal.id
-  project_name         = var.project_name
-  network_interface    = aws_network_interface.sonar.id
-  install_script       = data.template_file.sonar_properties.rendered
-  db_security_group    = aws_security_group.sgdb
-  db_subnet_group_name = aws_db_subnet_group.db_subnet_group.id
-  db_storage           = var.sonar_storage
-  db_engine            = var.sonar_engine
-  db_engine_version    = var.sonar_engine_version
-  db_instance_class    = var.sonar_instance_class
-  db_name              = var.sonar_db_name
-  db_username          = var.sonar_username
-  db_password          = var.sonar_password
-}
-
-module "jira" {
-  source = "./modules/jira"
-
-  ami                  = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
-  instance_type        = "t2.medium"
-  key_pair             = aws_key_pair.internal.id
-  project_name         = var.project_name
-  network_interface    = aws_network_interface.jira.id
-  install_script       = data.template_file.jira_properties.rendered
-  config_file          = template_dir.jira_config.destination_dir
-  bastion_public_ip    = aws_instance.bastion-server.public_ip
-  private_key          = var.internal_private_key_path
-  bastion_key          = var.bastion_key_path
-  bastion_private_key  = var.bastion_private_key_path
-  db_security_group    = aws_security_group.sgdb
-  db_subnet_group_name = aws_db_subnet_group.db_subnet_group.id
-  db_storage           = var.jira_storage
-  db_engine            = var.jira_engine
-  db_engine_version    = var.jira_engine_version
-  db_instance_class    = var.jira_instance_class
-  db_name              = var.jira_db_name
-  db_username          = var.jira_username
-  db_password          = var.jira_password
+  squid_password            = var.squid_password
+  squid_username            = var.squid_username
+  squid_ip                  = var.squid_ip
+  squid_port                = var.squid_port
+  internal_ssh_key_name     = aws_key_pair.internal.key_name
 }
 
 module "confluence" {
@@ -283,8 +93,20 @@ module "confluence" {
   instance_type        = "t2.medium"
   key_pair             = aws_key_pair.internal.id
   project_name         = var.project_name
-  network_interface    = aws_network_interface.confluence.id
-  install_script       = data.template_file.confluence_properties.rendered
+
+  ip_address           = var.confluence_ip
+  bastion_private_ip   = var.bastion_ip
+  nginx_public_ip      = aws_eip.nginx.public_ip
+  nginx_private_ip     = module.nginx.private_ip
+
+  route53_zone_id      = data.aws_route53_zone.default.zone_id
+  route53_name         = data.aws_route53_zone.default.name    
+  private1_subnet_cidr = var.private1_subnet_cidr
+  private2_subnet_cidr = var.private2_subnet_cidr
+  subnet_id            = aws_subnet.application1-subnet.id
+  vpc_id               = aws_vpc.devops.id
+
+  confluence_version   = var.confluence_version
   db_security_group    = aws_security_group.sgdb
   db_subnet_group_name = aws_db_subnet_group.db_subnet_group.id
   db_storage           = var.confluence_storage
@@ -294,6 +116,8 @@ module "confluence" {
   db_name              = var.confluence_db_name
   db_username          = var.confluence_username
   db_password          = var.confluence_password
+
+  enable               = var.confluence_enable
 }
 
 module "gitlab" {
@@ -303,13 +127,24 @@ module "gitlab" {
   instance_type        = "t2.medium"
   key_pair             = aws_key_pair.internal.id
   project_name         = var.project_name
-  network_interface    = aws_network_interface.gitlab.id
-  install_script       = data.template_file.gitlab_install.rendered
-  config_file          = template_dir.gitlab_config.destination_dir
-  bastion_public_ip    = aws_instance.bastion-server.public_ip
+
   private_key          = var.internal_private_key_path
   bastion_key          = var.bastion_key_path
   bastion_private_key  = var.bastion_private_key_path
+
+  ip_address           = var.gitlab_ip
+  bastion_public_ip    = module.bastion.public_ip
+  bastion_private_ip   = var.bastion_ip
+  nginx_public_ip      = aws_eip.nginx.public_ip
+  nginx_private_ip     = module.nginx.private_ip
+
+  route53_zone_id      = data.aws_route53_zone.default.zone_id
+  route53_name         = data.aws_route53_zone.default.name    
+  private1_subnet_cidr = var.private1_subnet_cidr
+  private2_subnet_cidr = var.private2_subnet_cidr
+  subnet_id            = aws_subnet.application1-subnet.id
+  vpc_id               = aws_vpc.devops.id
+
   db_security_group    = aws_security_group.sgdb
   db_subnet_group_name = aws_db_subnet_group.db_subnet_group.id
   db_storage           = var.gitlab_storage
@@ -319,4 +154,318 @@ module "gitlab" {
   db_name              = var.gitlab_db_name
   db_username          = var.gitlab_username
   db_password          = var.gitlab_password
+
+  enable               = var.gitlab_enable
+}
+
+module "grafana" {
+  source = "./modules/grafana"
+
+  ami                 = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
+  instance_type       = "t2.micro"
+  key_pair            = aws_key_pair.internal.id
+  project_name        = var.project_name
+
+  bastion_host_key    = var.bastion_key_path
+  bastion_private_key = var.bastion_private_key_path
+  private_key         = var.internal_private_key_path
+  remote_user         = "ec2-user"
+
+  ip_address          = var.grafana_ip
+  bastion_host        = module.bastion.public_ip
+  bastion_private_ip  = var.bastion_ip
+  nginx_public_ip     = aws_eip.nginx.public_ip
+  nginx_private_ip    = module.nginx.private_ip
+  prometheus_ip       = var.prometheus_ip
+
+  route53_zone_id     = data.aws_route53_zone.default.zone_id
+  route53_name        = data.aws_route53_zone.default.name    
+  subnet_id           = aws_subnet.application1-subnet.id
+  vpc_id              = aws_vpc.devops.id
+
+  grafana_version     = var.grafana_version
+
+  enable              = var.grafana_enable
+}
+
+module "jenkins" {
+  source = "./modules/jenkins"
+
+  ami                 = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
+  instance_type       = "t2.micro"
+  key_pair            = aws_key_pair.internal.id
+  project_name        = var.project_name
+
+  bastion_host_key    = var.bastion_key_path
+  bastion_private_key = var.bastion_private_key_path
+  private_key         = var.internal_private_key_path
+  remote_user         = "ec2-user"
+  install_script      = "../scripts/install_jenkins.sh"
+
+  ip_address          = var.jenkins_ip
+  bastion_host        = module.bastion.public_ip
+  bastion_private_ip  = var.bastion_ip
+  nginx_public_ip     = aws_eip.nginx.public_ip
+  nginx_private_ip    = module.nginx.private_ip
+
+  route53_zone_id     = data.aws_route53_zone.default.zone_id
+  route53_name        = data.aws_route53_zone.default.name    
+  subnet_id           = aws_subnet.application1-subnet.id
+  vpc_id              = aws_vpc.devops.id
+
+  enable              = var.jenkins_enable
+}
+
+module "jira" {
+  source = "./modules/jira"
+
+  ami                  = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
+  instance_type        = "t2.medium"
+  key_pair             = aws_key_pair.internal.id
+  project_name         = var.project_name
+
+  private_key          = var.internal_private_key_path
+  bastion_key          = var.bastion_key_path
+  bastion_private_key  = var.bastion_private_key_path
+
+  ip_address           = var.jira_ip
+  bastion_public_ip    = module.bastion.public_ip
+  nginx_public_ip      = aws_eip.nginx.public_ip
+  nginx_private_ip     = module.nginx.private_ip
+  bastion_private_ip   = var.bastion_ip
+
+  route53_zone_id      = data.aws_route53_zone.default.zone_id
+  route53_name         = data.aws_route53_zone.default.name    
+  private1_subnet_cidr = var.private1_subnet_cidr
+  private2_subnet_cidr = var.private2_subnet_cidr
+  subnet_id            = aws_subnet.application1-subnet.id
+  vpc_id               = aws_vpc.devops.id
+
+  jira_version         = var.jira_version
+  db_security_group    = aws_security_group.sgdb
+  db_subnet_group_name = aws_db_subnet_group.db_subnet_group.id
+  db_storage           = var.jira_storage
+  db_engine            = var.jira_engine
+  db_engine_version    = var.jira_engine_version
+  db_instance_class    = var.jira_instance_class
+  db_name              = var.jira_db_name
+  db_username          = var.jira_username
+  db_password          = var.jira_password
+
+  enable               = var.jira_enable
+}
+
+module "nat_instance" {
+  source = "./modules/nat_instance"
+
+  ami                       = var.ami_nat_id == null ? data.aws_ami.amzn2_nat.image_id : var.ami_nat_id
+  instance_type             = "t2.micro"
+  key_pair                  = aws_key_pair.internal.id
+  project_name              = var.project_name
+
+  ip_address                = var.nat_ip
+  bastion_private_ip        = var.bastion_ip
+
+  application1_subnet_cidr  = var.application1_subnet_cidr
+  application2_subnet_cidr  = var.application2_subnet_cidr
+  agent1_subnet_cidr        = var.agent1_subnet_cidr
+  agent2_subnet_cidr        = var.agent2_subnet_cidr
+  public_subnet_cidr        = var.public_subnet_cidr
+  subnet_id                 = aws_subnet.public-subnet.id
+  vpc_id                    = aws_vpc.devops.id
+}
+
+module "nexus" {
+  source = "./modules/nexus"
+
+  ami                 = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
+  instance_type       = "t2.medium"
+  key_pair            = aws_key_pair.internal.id
+  project_name        = var.project_name
+
+  ip_address          = var.nexus_ip
+  nginx_public_ip     = aws_eip.nginx.public_ip
+  nginx_private_ip    = module.nginx.private_ip
+  bastion_private_ip  = var.bastion_ip
+
+  route53_zone_id     = data.aws_route53_zone.default.zone_id
+  route53_name        = data.aws_route53_zone.default.name    
+
+  subnet_id           = aws_subnet.application1-subnet.id
+  vpc_id              = aws_vpc.devops.id
+  nexus_version       = var.nexus_version
+  enable              = var.nexus_enable
+}
+
+module "nginx" {
+  source = "./modules/nginx"
+
+  ami                       = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
+  instance_type             = "t2.micro"
+  key_pair                  = aws_key_pair.internal.id
+  project_name              = var.project_name
+
+  bastion_host_key          = var.bastion_key_path
+  bastion_private_key       = var.bastion_private_key_path
+  private_key               = var.internal_private_key_path
+  remote_user               = "ec2-user"
+
+  ip_address                = var.nginx_ip
+  bastion_private_ip        = var.bastion_ip
+  bastion_host              = module.bastion.public_ip
+
+  nginx_config              = "../configs/nginx/nginx.conf"
+  install_script            = "../scripts/install_nginx.sh"
+
+  application1_subnet_cidr  = var.application1_subnet_cidr
+  application2_subnet_cidr  = var.application2_subnet_cidr
+  subnet_id                 = aws_subnet.public-subnet.id
+  vpc_id                    = aws_vpc.devops.id
+  route53_name              = data.aws_route53_zone.default.name   
+
+  monitor_ip                = var.grafana_ip
+  jenkins_ip                = var.jenkins_ip
+  sonar_ip                  = var.sonar_ip
+  nexus_ip                  = var.nexus_ip
+  gitlab_ip                 = var.gitlab_ip
+  jira_ip                   = var.jira_ip
+  confluence_ip             = var.confluence_ip
+}
+
+module "openldap" {
+  source = "./modules/openldap"
+
+  ami                 = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
+  instance_type       = "t2.micro"
+  key_pair            = aws_key_pair.internal.id
+  project_name        = var.project_name
+
+  ip_address          = var.openldap_ip
+  bastion_private_ip  = var.bastion_ip
+  nginx_public_ip     = aws_eip.nginx.public_ip
+  nginx_private_ip    = module.nginx.private_ip
+
+  route53_zone_id     = data.aws_route53_zone.default.zone_id
+  route53_name        = data.aws_route53_zone.default.name    
+ 
+  subnet_id           = aws_subnet.application1-subnet.id
+  vpc_id              = aws_vpc.devops.id
+  enable              = var.openldap_enable
+}
+
+module "prometheus" {
+  source = "./modules/prometheus"
+
+  ami                 = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
+  instance_type       = "t2.micro"
+  key_pair            = aws_key_pair.internal.id
+  project_name        = var.project_name
+
+  bastion_host_key    = var.bastion_key_path
+  bastion_private_key = var.bastion_private_key_path
+  private_key         = var.internal_private_key_path
+  remote_user         = "ec2-user"
+
+  ip_address          = var.prometheus_ip
+  bastion_host        = module.bastion.public_ip
+  nginx_public_ip     = aws_eip.nginx.public_ip
+  nginx_private_ip    = module.nginx.private_ip
+  bastion_private_ip  = var.bastion_ip
+
+  route53_zone_id     = data.aws_route53_zone.default.zone_id
+  route53_name        = data.aws_route53_zone.default.name    
+
+  subnet_id           = aws_subnet.application1-subnet.id
+  vpc_id              = aws_vpc.devops.id
+  prometheus_version  = var.prometheus_version
+  enable              = var.prometheus_enable
+}
+
+module "sonarqube" {
+  source = "./modules/sonarqube"
+
+  ami                  = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
+  instance_type        = "t2.medium"
+  key_pair             = aws_key_pair.internal.id
+  project_name         = var.project_name
+
+  ip_address           = var.sonar_ip
+  bastion_private_ip   = var.bastion_ip
+  nginx_public_ip      = aws_eip.nginx.public_ip
+  nginx_private_ip     = module.nginx.private_ip
+
+  route53_zone_id      = data.aws_route53_zone.default.zone_id
+  route53_name         = data.aws_route53_zone.default.name    
+
+  private1_subnet_cidr = var.private1_subnet_cidr
+  private2_subnet_cidr = var.private2_subnet_cidr
+  subnet_id            = aws_subnet.application1-subnet.id
+  vpc_id               = aws_vpc.devops.id
+
+  sonar_version        = var.sonar_version
+  db_security_group    = aws_security_group.sgdb
+  db_subnet_group_name = aws_db_subnet_group.db_subnet_group.id
+  db_storage           = var.sonar_storage
+  db_engine            = var.sonar_engine
+  db_engine_version    = var.sonar_engine_version
+  db_instance_class    = var.sonar_instance_class
+  db_name              = var.sonar_db_name
+  db_username          = var.sonar_username
+  db_password          = var.sonar_password
+  enable               = var.sonarqube_enable
+}
+
+module "squid" {
+  source = "./modules/squid"
+
+  ami                       = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
+  instance_type             = "t2.micro"
+  key_pair                  = aws_key_pair.internal.id
+  project_name              = var.project_name
+
+  bastion_host_key          = var.bastion_key_path
+  bastion_private_key       = var.bastion_private_key_path
+  private_key               = var.internal_private_key_path
+  remote_user               = "ec2-user"  
+
+  ip_address                = var.squid_ip
+  bastion_host              = module.bastion.public_ip
+  bastion_private_ip        = var.bastion_ip
+  nginx_public_ip           = aws_eip.nginx.public_ip
+  nginx_private_ip          = module.nginx.private_ip
+
+  application1_subnet_cidr  = var.application1_subnet_cidr
+  application2_subnet_cidr  = var.application2_subnet_cidr
+  agent1_subnet_cidr        = var.agent1_subnet_cidr
+  agent2_subnet_cidr        = var.agent2_subnet_cidr
+  public_subnet_cidr        = var.public_subnet_cidr
+
+  subnet_id                 = aws_subnet.public-subnet.id
+  vpc_id                    = aws_vpc.devops.id
+
+  squid_password            = var.squid_password
+  squid_username            = var.squid_username
+  squid_port                = var.squid_port
+}
+
+
+module "zabbix" {
+  source = "./modules/zabbix"
+
+  ami                 = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
+  instance_type       = "t2.micro"
+  key_pair            = aws_key_pair.internal.id
+  project_name        = var.project_name
+
+  ip_address          = var.zabbix_ip
+  bastion_private_ip  = var.bastion_ip
+  nginx_public_ip     = aws_eip.nginx.public_ip
+  nginx_private_ip    = module.nginx.private_ip
+
+  route53_zone_id     = data.aws_route53_zone.default.zone_id
+  route53_name        = data.aws_route53_zone.default.name    
+
+  subnet_id           = aws_subnet.application1-subnet.id
+  vpc_id              = aws_vpc.devops.id
+  enable              = var.zabix_enable
 }

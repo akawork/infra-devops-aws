@@ -99,7 +99,7 @@ module "bitbucket" {
   private_key          = var.internal_private_key_path
   remote_user          = "ec2-user"
 
-  ip_address           = var.bastion_ip
+  ip_address           = var.bitbucket_ip
   bastion_host         = module.bastion.public_ip
   bastion_private_ip   = var.bastion_ip
   nginx_public_ip      = aws_eip.nginx.public_ip

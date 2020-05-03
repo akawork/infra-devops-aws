@@ -134,6 +134,7 @@ resource "template_dir" "nginx_conf" {
     jira_domain_name       = "jira.${var.domain_name}"
     confluence_domain_name = "confluence.${var.domain_name}"
     monitor_domain_name    = "monitor.${var.domain_name}"
+    bitbucket_domain_name  = "bitbucket.${var.domain_name}"
     monitor_ip             = var.monitor_ip
     jenkins_ip             = var.jenkins_ip
     sonar_ip               = var.sonar_ip
@@ -141,5 +142,6 @@ resource "template_dir" "nginx_conf" {
     gitlab_ip              = var.gitlab_ip
     jira_ip                = var.jira_ip
     confluence_ip          = var.confluence_ip
+    bitbucket_ip          = var.bitbucket_ip
   }
 }

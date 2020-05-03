@@ -372,6 +372,7 @@ module "nginx" {
   gitlab_ip                 = var.gitlab_ip
   jira_ip                   = var.jira_ip
   confluence_ip             = var.confluence_ip
+  bitbucket_ip              = var.bitbucket_ip
 }
 
 module "openldap" {

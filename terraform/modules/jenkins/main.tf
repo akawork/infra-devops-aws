@@ -3,7 +3,7 @@ resource "aws_instance" "jenkins" {
   ami           = var.ami
   instance_type = var.instance_type
   key_name      = var.key_pair
-  user_data     = file(var.install_script)
+  user_data     = data.template_file.jenkins_install[0].rendered
   count         = var.enable == "true" ? 1 : 0
 
   network_interface {
@@ -87,3 +87,17 @@ resource "aws_security_group" "sgjenkins" {
     description = "Used to download packages"
   }
 }
+
+data "template_file" "jenkins_install" {
+  template = file("../scripts/install_jenkins.sh.tpl")
+  count    = var.enable == "true" ? 1 : 0
+
+  vars = {
+    jenkins_version = var.jenkins_version
+  }
+}
+
+# data "external" "admin_passwd" {
+#   count   = var.enable == "true" ? 1 : 0
+#   program = ["cat", "/var/lib/jenkins/secrets/initialAdminPassword"]
+# }

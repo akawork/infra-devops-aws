@@ -8,4 +8,5 @@ output "private_ip" {
 
 output "db_endpoint" {
   value = aws_db_instance.confluence[0].endpoint
+  description = "The database endpoint of the confluence."
 }

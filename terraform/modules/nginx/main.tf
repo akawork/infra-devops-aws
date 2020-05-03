@@ -127,13 +127,13 @@ resource "template_dir" "nginx_conf" {
   destination_dir = "../configs/nginx/conf.render/"
 
   vars = {
-    jenkins_domain_name    = "jenkins.${var.route53_name}" 
-    sonar_domain_name      = "sonar.${var.route53_name}"
-    nexus_domain_name      = "nexus.${var.route53_name}"
-    gitlab_domain_name     = "gitlab.${var.route53_name}"
-    jira_domain_name       = "jira.${var.route53_name}"
-    confluence_domain_name = "confluence.${var.route53_name}"
-    monitor_domain_name    = "monitor.${var.route53_name}"
+    jenkins_domain_name    = "jenkins.${var.domain_name}" 
+    sonar_domain_name      = "sonar.${var.domain_name}"
+    nexus_domain_name      = "nexus.${var.domain_name}"
+    gitlab_domain_name     = "gitlab.${var.domain_name}"
+    jira_domain_name       = "jira.${var.domain_name}"
+    confluence_domain_name = "confluence.${var.domain_name}"
+    monitor_domain_name    = "monitor.${var.domain_name}"
     monitor_ip             = var.monitor_ip
     jenkins_ip             = var.jenkins_ip
     sonar_ip               = var.sonar_ip

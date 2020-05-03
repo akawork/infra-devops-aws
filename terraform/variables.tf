@@ -12,23 +12,23 @@ variable "project_name" {
 # Region variable
 variable "region" {
   description = "Region for the the system"
-  default     = "us-west-1"
+  default     = "us-east-2"
 }
 
 # Define Availability Zone
 
 variable "az_1" {
-  default     = "us-west-1a"
+  default     = "us-east-2a"
   description = "First Availability Zone"
 }
 
 variable "az_2" {
-  default     = "us-west-1b"
+  default     = "us-east-2b"
   description = "Second Availability Zone"
 }
 
 variable "domain_name" {
-  default     = "demo1.akawork.io"
+  default     = "demo.akawork.io"
   description = "Your domain name"
 }
 
@@ -310,6 +310,51 @@ variable "confluence_password" {
   default     = "DevOps365"
 }
 
+## Bitbucket DB
+variable "bitbucket_identifier" {
+  default     = "bitbucket"
+  description = "Identifier for your DB"
+}
+
+variable "bitbucket_storage" {
+  default     = "10"
+  description = "Storage size in GB"
+}
+
+variable "bitbucket_engine" {
+  default     = "postgres"
+  description = "Engine type, example values mysql, postgres"
+}
+
+variable "bitbucket_engine_version" {
+  description = "Engine version"
+
+  default = {
+    mysql    = "5.7.21"
+    postgres = "9.6.8"
+  }
+}
+
+variable "bitbucket_instance_class" {
+  default     = "db.t2.micro"
+  description = "Instance class"
+}
+
+variable "bitbucket_db_name" {
+  default     = "bitbucket"
+  description = "Database name"
+}
+
+variable "bitbucket_username" {
+  default     = "bitbucket"
+  description = "User name"
+}
+
+variable "bitbucket_password" {
+  description = "Please enter password for Bitbucket DB"
+  default     = "DevOps365"
+}
+
 ######################################################
 ##                    Packages                      ##
 ######################################################
@@ -322,6 +367,11 @@ variable "nexus_version" {
 variable "sonar_version" {
   default     = "sonarqube-7.9.1"
   description = "Version of SonarQube. https://www.sonarqube.org/downloads/"
+}
+
+variable "jenkins_version" {
+  default     = "jenkins-2.222.3"
+  description = "Version of Jenkins. https://www.jenkins.io/download/"
 }
 
 variable "jira_version" {
@@ -342,6 +392,11 @@ variable "prometheus_version" {
 variable "grafana_version" {
   default     = "grafana-6.3.2-1"
   description = "Version of Grafana. https://grafana.com/grafana/download"
+}
+
+variable "bitbucket_version" {
+  default     = "atlassian-bitbucket-7.1.2"
+  description = "Version of Bitbucket. https://bitbucket.org/product/download/"
 }
 
 ######################################################
@@ -403,6 +458,11 @@ variable "nexus_ip" {
 variable "gitlab_ip" {
   default     = "10.15.2.15"
   description = "IP of GitLab Server"
+}
+
+variable "bitbucket_ip" {
+  default     = "10.15.2.16"
+  description = "IP of Bitbucket Server"
 }
 
 variable "nginx_ip" {

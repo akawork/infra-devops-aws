@@ -5,7 +5,7 @@
 provider "aws" {
   version                 = "~> 2.13"
   shared_credentials_file = "~/.aws/credentials"
-  profile                 = "mfa"
+  profile                 = "default"
   region                  = var.region
 }
 
@@ -84,6 +84,48 @@ module "bastion" {
   squid_ip                  = var.squid_ip
   squid_port                = var.squid_port
   internal_ssh_key_name     = aws_key_pair.internal.key_name
+}
+
+module "bitbucket" {
+  source = "./modules/bitbucket"
+
+  ami                 = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
+  instance_type       = "t2.medium"
+  key_pair            = aws_key_pair.internal.id
+  project_name        = var.project_name
+
+  bastion_host_key     = var.bastion_key_path
+  bastion_private_key  = var.bastion_private_key_path
+  private_key          = var.internal_private_key_path
+  remote_user          = "ec2-user"
+
+  ip_address           = var.bastion_ip
+  bastion_host         = module.bastion.public_ip
+  bastion_private_ip   = var.bastion_ip
+  nginx_public_ip      = aws_eip.nginx.public_ip
+  nginx_private_ip     = module.nginx.private_ip
+
+  route53_zone_id      = data.aws_route53_zone.default.zone_id
+  route53_name         = data.aws_route53_zone.default.name    
+  private1_subnet_cidr = var.private1_subnet_cidr
+  private2_subnet_cidr = var.private2_subnet_cidr
+  subnet_id            = aws_subnet.application1-subnet.id
+  vpc_id               = aws_vpc.devops.id
+  domain_name          = var.domain_name 
+
+  db_identifier        = var.project_name != "" ? lower("${var.project_name}-${var.bitbucket_identifier}") : var.bitbucket_identifier
+  db_allocated_storage = var.bitbucket_storage
+  db_engine            = var.bitbucket_engine
+  db_engine_version    = lookup(var.bitbucket_engine_version, var.bitbucket_engine)
+  db_instance_class    = var.bitbucket_instance_class
+  db_name              = var.bitbucket_db_name
+  db_username          = var.bitbucket_username
+  db_password          = var.bitbucket_password
+  db_security_group    = aws_security_group.sgdb
+  db_subnet_group_name = aws_db_subnet_group.db_subnet_group.id
+
+  bitbucket_version    = var.bitbucket_version
+  enable               = var.bitbucket_enable
 }
 
 module "confluence" {
@@ -212,7 +254,7 @@ module "jenkins" {
   route53_name        = data.aws_route53_zone.default.name    
   subnet_id           = aws_subnet.application1-subnet.id
   vpc_id              = aws_vpc.devops.id
-
+  jenkins_version     = var.jenkins_version
   enable              = var.jenkins_enable
 }
 
@@ -321,7 +363,7 @@ module "nginx" {
   application2_subnet_cidr  = var.application2_subnet_cidr
   subnet_id                 = aws_subnet.public-subnet.id
   vpc_id                    = aws_vpc.devops.id
-  route53_name              = data.aws_route53_zone.default.name   
+  domain_name               = var.domain_name   
 
   monitor_ip                = var.grafana_ip
   jenkins_ip                = var.jenkins_ip

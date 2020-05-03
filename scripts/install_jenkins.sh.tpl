@@ -18,7 +18,7 @@ function install_jenkins {
     #import repo to package "rpm" 
     rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
     #install jenkins 
-    sudo yum -y install jenkins
+    sudo yum -y install ${jenkins_version}
     sudo systemctl start jenkins
     sudo systemctl enable jenkins
     #get password for jenkins 

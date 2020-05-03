@@ -59,7 +59,7 @@ variable "ip_address" {
   description = "IP address attach to Network Interface"
 }
 
-variable "route53_name" {
+variable "domain_name" {
   type        = string
   description = "Defautl domain name"
 }

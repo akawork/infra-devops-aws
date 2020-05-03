@@ -68,19 +68,19 @@ resource "aws_security_group" "sgbastion" {
     description = "Allow SSH access on Bastion Server"
   }
 
-  ingress {
-    from_port = 32768
-    to_port   = 65535
-    protocol  = "tcp"
-    cidr_blocks = [
-      var.application1_subnet_cidr,
-      var.application2_subnet_cidr,
-      var.public_subnet_cidr,
-      var.agent1_subnet_cidr,
-      var.agent2_subnet_cidr,
-    ]
-    description = "Allow SSH response from Another Server in VPC to Bastion server"
-  }
+#   ingress {
+#     from_port = 32768
+#     to_port   = 65535
+#     protocol  = "tcp"
+#     cidr_blocks = [
+#       var.application1_subnet_cidr,
+#       var.application2_subnet_cidr,
+#       var.public_subnet_cidr,
+#       var.agent1_subnet_cidr,
+#       var.agent2_subnet_cidr,
+#     ]
+#     description = "Allow SSH response from Another Server in VPC to Bastion server"
+#   }
 
   egress {
     from_port = 22
@@ -118,11 +118,11 @@ data "template_file" "bastion_config" {
   template = file("../scripts/config_bastion.sh.tpl")
 
   vars = {
-    squid_password            = var.squid_password
-    squid_username            = var.squid_username
-    squid_ip                  = var.squid_ip
-    squid_port                = var.squid_port
-    remote_user               = var.remote_user
+    squid_password        = var.squid_password
+    squid_username        = var.squid_username
+    squid_ip              = var.squid_ip
+    squid_port            = var.squid_port
+    remote_user           = var.remote_user
     internal_ssh_key_name = var.internal_ssh_key_name
   }
 }

@@ -114,6 +114,10 @@ variable "confluence_ip" {
   description = "IP address of Confluence"
 }
 
+variable "bitbucket_ip" {
+  type        = string
+  description = "IP address of Bitbucket"
+}
 
 variable "application1_subnet_cidr" {
   type        = string

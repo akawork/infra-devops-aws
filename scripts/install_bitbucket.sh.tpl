@@ -6,10 +6,11 @@ function prepare_env {
     sudo yum update -y && yum install -y htop nc
     
     # Install openjdk-1.8
-    sudo yum -y install java-1.8.0-openjdk.x86_64 
+    # sudo yum -y install java-1.8.0-openjdk.x86_64 
+    sudo amazon-linux-extras install java-openjdk11 -y
 
     cp /etc/profile /etc/profile_backup
-    echo 'export JAVA_HOME=/usr/lib/jvm/jre-1.8.0-openjdk' | sudo tee -a /etc/profile
+    echo 'export JAVA_HOME=/usr/lib/jvm/jre-11-openjdk' | sudo tee -a /etc/profile
     echo 'export JRE_HOME=/usr/lib/jvm/jre' | sudo tee -a /etc/profile
     echo 'export BITBUCKET_HOME=/opt/bitbucket-home' | sudo tee -a /etc/profile
     # Install git 2.x
@@ -49,7 +50,7 @@ Type=forking
 User=atlbitbucket
 Environment=BITBUCKET_HOME=/opt/bitbucket-home
 Environment=JRE_HOME=/usr/lib/jvm/jre
-Environment=JAVA_HOME=/usr/lib/jvm/jre-1.8.0-openjdk
+Environment=JAVA_HOME=/usr/lib/jvm/jre-11-openjdk
 ExecStart=/opt/bitbucket/bin/start-bitbucket.sh
 ExecStop=/opt/bitbucket/bin/stop-bitbucket.sh
  

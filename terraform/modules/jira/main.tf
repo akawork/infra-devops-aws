@@ -151,5 +151,6 @@ resource "template_dir" "jira_config" {
     db_name     = var.db_name
     db_password = var.db_password
     db_username = var.db_username
+    domain_name = var.domain_name
   }
 }

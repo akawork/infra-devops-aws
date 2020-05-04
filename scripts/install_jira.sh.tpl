@@ -50,6 +50,11 @@ EOF
     sudo chown jira:jira /opt/jira-home/dbconfig.xml
     sudo chmod 640 /opt/jira-home/dbconfig.xml
 
+    # Config Jira using Nginx proxy  (HTTPs)
+    sudo cp /tmp/server.xml /opt/jira/conf/
+    sudo chown jira:jira /opt/jira/conf/server.xml   
+    sudo chmod 700 /opt/jira/conf/server.xml
+    
     # Activate the service
     sudo systemctl daemon-reload
     sudo systemctl enable jira.service

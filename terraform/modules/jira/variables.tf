@@ -69,6 +69,11 @@ variable "vpc_id" {
   description = "ID of the VPC"
 }
 
+variable "domain_name" {
+  type        = string
+  description = "Defautl domain name"
+}
+
 variable "db_identifier" {
   default     = "jiradb"
   description = "Identifier for your DB"

@@ -282,7 +282,8 @@ module "jira" {
   private2_subnet_cidr = var.private2_subnet_cidr
   subnet_id            = aws_subnet.application1-subnet.id
   vpc_id               = aws_vpc.devops.id
-
+  domain_name          = var.domain_name 
+  
   jira_version         = var.jira_version
   db_security_group    = aws_security_group.sgdb
   db_subnet_group_name = aws_db_subnet_group.db_subnet_group.id

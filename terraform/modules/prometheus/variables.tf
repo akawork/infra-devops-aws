@@ -19,21 +19,6 @@ variable "key_pair" {
   description = "SSH key using for ssh remote connection"
 }
 
-variable "network_interface" {
-  type        = string
-  description = "Network Interface define"
-}
-
-variable "install_script" {
-  type        = string
-  description = "Install jenkins script"
-}
-
-variable "prometheus_config" {
-  type        = string
-  description = "Prometheus configuration"
-}
-
 variable "bastion_host" {
   type        = string
   description = "Bastion Host IP for install jenkins in Local network"
@@ -57,4 +42,54 @@ variable "private_key" {
 variable "remote_user" {
   type        = string
   description = "User using for remote to instance"
+}
+
+variable "ip_address" {
+  type        = string
+  description = "IP address attach to Network Interface"
+}
+
+variable "route53_zone_id" {
+  type        = string
+  description = "Zone ID of domain"
+}
+
+variable "route53_name" {
+  type        = string
+  description = "Defautl domain name"
+}
+
+variable "nginx_public_ip" {
+  type        = string
+  description = "Elastic IP address of the Nginx"
+}
+
+variable "nginx_private_ip" {
+  type        = string
+  description = "Private IP address of the Nginx"
+}
+
+variable "bastion_private_ip" {
+  type        = string
+  description = "Private IP address of the Bastion"
+}
+
+variable "subnet_id" {
+  type        = string
+  description = "Private IP address of the Bastion"
+}
+
+variable "vpc_id" {
+  type        = string
+  description = "ID of the VPC"
+}
+
+variable "prometheus_version" {
+  type        = string
+  description = "Version of Prometheus"
+}
+
+variable "enable" {
+  type        = string
+  description = "Enable service if the value is set to true"
 }

@@ -1,7 +1,11 @@
 output "instance_id" {
-  value = aws_instance.jenkins.id
+  value = aws_instance.jenkins[0].id
 }
 
 output "private_ip" {
-  value = aws_instance.jenkins.private_ip
+  value = aws_instance.jenkins[0].private_ip
 }
+
+# output "admin_passwd" {
+#   value = data.external.admin_passwd[0]
+# }

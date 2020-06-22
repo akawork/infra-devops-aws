@@ -310,6 +310,51 @@ variable "confluence_password" {
   default     = "DevOps365"
 }
 
+## Bitbucket DB
+variable "bitbucket_identifier" {
+  default     = "bitbucket"
+  description = "Identifier for your DB"
+}
+
+variable "bitbucket_storage" {
+  default     = "10"
+  description = "Storage size in GB"
+}
+
+variable "bitbucket_engine" {
+  default     = "postgres"
+  description = "Engine type, example values mysql, postgres"
+}
+
+variable "bitbucket_engine_version" {
+  description = "Engine version"
+
+  default = {
+    mysql    = "5.7.21"
+    postgres = "9.6.8"
+  }
+}
+
+variable "bitbucket_instance_class" {
+  default     = "db.t2.micro"
+  description = "Instance class"
+}
+
+variable "bitbucket_db_name" {
+  default     = "bitbucket"
+  description = "Database name"
+}
+
+variable "bitbucket_username" {
+  default     = "bitbucket"
+  description = "User name"
+}
+
+variable "bitbucket_password" {
+  description = "Please enter password for Bitbucket DB"
+  default     = "DevOps365"
+}
+
 ######################################################
 ##                    Packages                      ##
 ######################################################
@@ -322,6 +367,11 @@ variable "nexus_version" {
 variable "sonar_version" {
   default     = "sonarqube-7.9.1"
   description = "Version of SonarQube. https://www.sonarqube.org/downloads/"
+}
+
+variable "jenkins_version" {
+  default     = "jenkins-2.222.3"
+  description = "Version of Jenkins. https://www.jenkins.io/download/"
 }
 
 variable "jira_version" {
@@ -342,6 +392,11 @@ variable "prometheus_version" {
 variable "grafana_version" {
   default     = "grafana-6.3.2-1"
   description = "Version of Grafana. https://grafana.com/grafana/download"
+}
+
+variable "bitbucket_version" {
+  default     = "atlassian-bitbucket-7.1.2"
+  description = "Version of Bitbucket. https://bitbucket.org/product/download/"
 }
 
 ######################################################
@@ -405,6 +460,11 @@ variable "gitlab_ip" {
   description = "IP of GitLab Server"
 }
 
+variable "bitbucket_ip" {
+  default     = "10.15.2.16"
+  description = "IP of Bitbucket Server"
+}
+
 variable "nginx_ip" {
   default     = "10.15.1.100"
   description = "IP of NginX Server"
@@ -438,4 +498,63 @@ variable "grafana_ip" {
 variable "prometheus_ip" {
   default     = "10.15.2.203"
   description = "IP of Prometheus"
+}
+
+######################################################
+##                     Component                    ##
+######################################################
+
+variable "bitbucket_enable" {
+  description = "Use Bitbucket service as version control system"
+  default     = "true"
+}
+
+variable "confluence_enable" {
+  description = "Use Confluence service to collaborate and share knowledge with your team"
+  default     = "true"
+}
+
+variable "gitlab_enable" {
+  description = "Use Gitlab service"
+  default     = "true"
+}
+
+variable "grafana_enable" {
+  description = "Use Grafana service to visualize metrics"
+  default     = "true"
+}
+
+variable "jenkins_enable" {
+  description = "Use Jenkins service"
+  default     = "true"
+}
+
+variable "jira_enable" {
+  description = "Use Jira service to plan, track, and manage your agile and software development projects"
+  default     = "true"
+}
+
+variable "nexus_enable" {
+  description = "Use Nexus Repository Manager"
+  default     = "true"
+}
+
+variable "openldap_enable" {
+  description = "Use OpenLDAP service, implement LDAP to centralized authentication"
+  default     = "true"
+}
+
+variable "prometheus_enable" {
+  description = "Use Prometheus service to monitoring system and application"
+  default     = "true"
+}
+
+variable "sonarqube_enable" {
+  description = "Use Sonarqube service to scan and analysis source code"
+  default     = "true"
+}
+
+variable "zabix_enable" {
+  description = "Use Zabbix service to monitoring, an alternative monitor solution"
+  default     = "true"
 }

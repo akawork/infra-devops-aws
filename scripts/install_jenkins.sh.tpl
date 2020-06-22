@@ -6,10 +6,10 @@ function install_jenkins {
     sudo yum update -y
 
     #yum install java
-    sudo yum -y install java-1.8.0-openjdk.x86_64 wget
-
+    sudo yum -y install wget # java-1.8.0-openjdk.x86_64 
+    sudo amazon-linux-extras install java-openjdk11 -y
     cp /etc/profile /etc/profile_backup
-    echo 'export JAVA_HOME=/usr/lib/jvm/jre-1.8.0-openjdk' | sudo tee -a /etc/profile
+    echo 'export JAVA_HOME=/usr/lib/jvm/jre-11-openjdk' | sudo tee -a /etc/profile
     echo 'export JRE_HOME=/usr/lib/jvm/jre' | sudo tee -a /etc/profile
     source /etc/profile
 
@@ -18,7 +18,7 @@ function install_jenkins {
     #import repo to package "rpm" 
     rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
     #install jenkins 
-    sudo yum -y install jenkins
+    sudo yum -y install ${jenkins_version}
     sudo systemctl start jenkins
     sudo systemctl enable jenkins
     #get password for jenkins 

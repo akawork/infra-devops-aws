@@ -19,21 +19,55 @@ variable "key_pair" {
   description = "SSH key using for ssh remote connection"
 }
 
-variable "network_interface" {
+variable "ip_address" {
   type        = string
-  description = "Network Interface define"
+  description = "IP address attach to Network Interface"
 }
 
-variable "install_script" {
+variable "route53_zone_id" {
   type        = string
-  description = "Install jenkins script"
+  description = "Zone ID of domain"
 }
 
-variable "config_file" {
+variable "route53_name" {
   type        = string
-  description = "Configuration File"
+  description = "Defautl domain name"
 }
 
+variable "nginx_public_ip" {
+  type        = string
+  description = "Elastic IP address of the Nginx"
+}
+
+variable "nginx_private_ip" {
+  type        = string
+  description = "Private IP address of the Nginx"
+}
+
+variable "private1_subnet_cidr" {
+  type        = string
+  description = "Private 1 subnet CIDR"
+}
+
+variable "private2_subnet_cidr" {
+  type        = string
+  description = "Private 2 subnet CIDR"
+}
+
+variable "bastion_private_ip" {
+  type        = string
+  description = "Private IP address of the Bastion"
+}
+
+variable "subnet_id" {
+  type        = string
+  description = "Private IP address of the Bastion"
+}
+
+variable "vpc_id" {
+  type        = string
+  description = "ID of the VPC"
+}
 
 variable "db_identifier" {
   default     = "gitlabdb"
@@ -95,4 +129,9 @@ variable "bastion_key" {
 variable "bastion_private_key" {
   type        = string
   description = "Private Key Using for SSH to server"
+}
+
+variable "enable" {
+  type        = string
+  description = "Enable service if the value is set to true"
 }

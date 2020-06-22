@@ -24,31 +24,6 @@ variable "ip_address" {
   description = "IP address attach to Network Interface"
 }
 
-variable "squid_username" {
-  type        = string
-  description = "Username using for login Squid Proxy"
-}
-
-variable "squid_password" {
-  type        = string
-  description = "Password using for login Squid Proxy"
-}
-
-variable "squid_port" {
-  type        = string
-  description = "Port using for access Squid Proxy"
-}
-
-variable "nginx_public_ip" {
-  type        = string
-  description = "Elastic IP address of the Nginx"
-}
-
-variable "nginx_private_ip" {
-  type        = string
-  description = "Private IP address of the Nginx"
-}
-
 variable "application1_subnet_cidr" {
   type        = string
   description = "Applicatioin 1 subnet CIDR"
@@ -74,11 +49,6 @@ variable "public_subnet_cidr" {
   description = "Public subnet CIDR"
 }
 
-variable "bastion_private_ip" {
-  type        = string
-  description = "Private IP address of the Bastion"
-}
-
 variable "subnet_id" {
   type        = string
   description = "Private IP address of the Bastion"
@@ -89,27 +59,42 @@ variable "vpc_id" {
   description = "ID of the VPC"
 }
 
-variable "bastion_host" {
+variable "squid_username" {
   type        = string
-  description = "Bastion Host IP for install jenkins in Local network"
+  description = "Username for squid admin"
 }
 
-variable "bastion_host_key" {
+variable "squid_password" {
   type        = string
-  description = "Bastion host key"
+  description = "password for squid admin"
 }
 
-variable "bastion_private_key" {
+variable "squid_port" {
   type        = string
-  description = "Bastion private key"
+  description = "Squid port listen"
 }
 
-variable "private_key" {
+variable "squid_ip" {
   type        = string
-  description = "Private key using for ssh to jenkins server"
+  description = "IP Squid server"
+}
+
+variable "internal_private_key_path" {
+  type        = string
+  description = "SSH Key to access internal instances"
+}
+
+variable "bastion_private_key_path" {
+  type        = string
+  description = "Bastion SSH Private Key path"
 }
 
 variable "remote_user" {
   type        = string
-  description = "User using for remote to instance"
+  description = "Username using for remote access"
+}
+
+variable "internal_ssh_key_name" {
+  type        = string
+  description = "SSH Keyname to access internal instances"
 }

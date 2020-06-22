@@ -7,7 +7,7 @@ resource "aws_eip" "nat" {
   }
 }
 
-# Define EIP for NAT gateway
+# Define EIP for Nginx
 resource "aws_eip" "nginx" {
   vpc = true
 

@@ -9,11 +9,6 @@ variable "project_name" {
   description = "Project Name or System Name"
 }
 
-variable "grafana_config" {
-  type        = string
-  description = "Grafana Configuration files"
-}
-
 variable "instance_type" {
   type        = string
   description = "Instance type"
@@ -24,14 +19,9 @@ variable "key_pair" {
   description = "SSH key using for ssh remote connection"
 }
 
-variable "network_interface" {
+variable "ip_address" {
   type        = string
-  description = "Network Interface define"
-}
-
-variable "install_script" {
-  type        = string
-  description = "Install jenkins script"
+  description = "IP address attach to Network Interface"
 }
 
 variable "bastion_host" {
@@ -57,4 +47,54 @@ variable "private_key" {
 variable "remote_user" {
   type        = string
   description = "User using for remote to instance"
+}
+
+variable "route53_zone_id" {
+  type        = string
+  description = "Zone ID of domain"
+}
+
+variable "route53_name" {
+  type        = string
+  description = "Defautl domain name"
+}
+
+variable "nginx_public_ip" {
+  type        = string
+  description = "Elastic IP address of the Nginx"
+}
+
+variable "nginx_private_ip" {
+  type        = string
+  description = "Private IP address of the Nginx"
+}
+
+variable "bastion_private_ip" {
+  type        = string
+  description = "Private IP address of the Bastion"
+}
+
+variable "prometheus_ip" {
+  type        = string
+  description = "Private IP address of the Prometheus server"
+}
+
+variable "subnet_id" {
+  type        = string
+  description = "Subnet id attached by network interface"
+}
+
+variable "vpc_id" {
+  type        = string
+  description = "ID of the VPC"
+}
+
+variable "grafana_version" {
+  type        = string
+  description = "Version of Grafana"
+}
+
+variable "enable" {
+  type        = string
+  description = "Enable service if the value is set to true"
 }

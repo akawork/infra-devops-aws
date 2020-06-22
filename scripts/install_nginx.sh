@@ -10,7 +10,8 @@ function install_nginx {
     fi
 
     sudo yum update -y
-    sudo yum install -y nginx
+    
+    sudo yum install -y nginx certbot-nginx
     sudo systemctl enable nginx
     sudo systemctl start nginx
 

@@ -1,27 +1,48 @@
 variable "ami" {
-  type        = string
   description = "AMI ID"
 }
 
 variable "project_name" {
-  type        = string
   default     = ""
   description = "Project Name or System Name"
 }
 
 variable "instance_type" {
-  type        = string
   description = "Instance type"
 }
 
 variable "key_pair" {
-  type        = string
   description = "SSH key using for ssh remote connection"
+}
+
+variable "bastion_host" {
+  description = "Bastion Host IP for install jenkins in Local network"
+}
+
+variable "bastion_host_key" {
+  description = "Bastion host key"
+}
+
+variable "bastion_private_key" {
+  description = "Bastion private key"
+}
+
+variable "private_key" {
+  description = "Private key using for ssh to jenkins server"
+}
+
+variable "remote_user" {
+  description = "User using for remote to instance"
 }
 
 variable "ip_address" {
   type        = string
   description = "IP address attach to Network Interface"
+}
+
+variable "domain_name" {
+  type        = string
+  description = "Defautl domain name"
 }
 
 variable "route53_zone_id" {
@@ -69,71 +90,58 @@ variable "vpc_id" {
   description = "ID of the VPC"
 }
 
+# variable "java_installer" {
+#   description = "Url to upload Oracle Java to server"
+# }
+
+# DATABASE VARIABLES
+# variable "db_depends_on" {
+#   description = "Database "
+# }
+
 variable "db_identifier" {
-  default     = "jiradb"
-  description = "Identifier for your DB"
+  description = "Database "
 }
 
-variable "db_storage" {
-  description = "Storage size in GB"
+variable "db_allocated_storage" {
+  description = "Database "
 }
 
 variable "db_engine" {
-  default     = "postgres"
-  description = "Engine type, example values mysql, postgres"
+  description = "Database "
 }
 
 variable "db_engine_version" {
-  description = "Engine version"
+  description = "Database "
 }
 
 variable "db_instance_class" {
-  description = "Instance class"
+  description = "Database "
 }
 
 variable "db_name" {
-  description = "Database name"
+  description = "Database "
 }
 
 variable "db_username" {
-  description = "User name"
+  description = "Database "
 }
 
 variable "db_password" {
-  description = "Please enter password for SonarQube DB"
+  description = "Database "
 }
 
 variable "db_security_group" {
-  description = "Security group for Database"
+  description = "Database "
 }
 
 variable "db_subnet_group_name" {
-  description = "Subnet group for Database"
+  description = "Database "
 }
 
-variable "bastion_public_ip" {
+variable "bitbucket_version" {
   type        = string
-  description = "Bastion Public IP"
-}
-
-variable "private_key" {
-  type        = string
-  description = "Private Key Using for SSH to server"
-}
-
-variable "bastion_key" {
-  type        = string
-  description = "Private Key Using for SSH to server"
-}
-
-variable "bastion_private_key" {
-  type        = string
-  description = "Private Key Using for SSH to server"
-}
-
-variable "jira_version" {
-  type        = string
-  description = "Version of jira"
+  description = "Version of bitbucket"
 }
 
 variable "enable" {

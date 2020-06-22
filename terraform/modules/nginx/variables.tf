@@ -24,16 +24,6 @@ variable "nginx_config" {
   description = "nginx.conf file"
 }
 
-variable "nginx_configd" {
-  type        = string
-  description = "Collect all configuration files in config.d"
-}
-
-variable "network_interface" {
-  type        = string
-  description = "Network Interface define"
-}
-
 variable "install_script" {
   type        = string
   description = "Install Nginx script"
@@ -62,4 +52,79 @@ variable "private_key" {
 variable "remote_user" {
   type        = string
   description = "User using for remote to instance"
+}
+
+variable "ip_address" {
+  type        = string
+  description = "IP address attach to Network Interface"
+}
+
+variable "domain_name" {
+  type        = string
+  description = "Defautl domain name"
+}
+
+variable "bastion_private_ip" {
+  type        = string
+  description = "Private IP address of the Bastion"
+}
+
+variable "subnet_id" {
+  type        = string
+  description = "Subnet id attached by network interface"
+}
+
+variable "vpc_id" {
+  type        = string
+  description = "ID of the VPC"
+}
+
+variable "monitor_ip" {
+  type        = string
+  description = "IP address of Grafana"
+}
+
+variable "jenkins_ip" {
+  type        = string
+  description = "IP address of Jenkins"
+}
+
+variable "sonar_ip" {
+  type        = string
+  description = "IP address of Sonar"
+}
+
+variable "nexus_ip" {
+  type        = string
+  description = "IP address of Nexus"
+}
+
+variable "gitlab_ip" {
+  type        = string
+  description = "IP address of Gitlab"
+}
+
+variable "jira_ip" {
+  type        = string
+  description = "IP address of Jira"
+}
+
+variable "confluence_ip" {
+  type        = string
+  description = "IP address of Confluence"
+}
+
+variable "bitbucket_ip" {
+  type        = string
+  description = "IP address of Bitbucket"
+}
+
+variable "application1_subnet_cidr" {
+  type        = string
+  description = "Applicatioin 1 subnet CIDR"
+}
+
+variable "application2_subnet_cidr" {
+  type        = string
+  description = "Applicatioin 2 subnet CIDR"
 }

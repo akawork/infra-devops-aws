@@ -137,6 +137,30 @@ resource "template_dir" "squid_config" {
   }
 }
 
+# Rocket Chat
+data "template_file" "rocketchat_install" {
+  template = file("../scripts/install_rocketchat.sh.tpl")
+
+  vars = {
+    rocketchat_password = var.rocketchat_password
+    rocketchat_username = var.rocketchat_username
+  }
+}
+
+resource "template_dir" "rocketchat_config" {
+  source_dir      = "../configs/rocketchat/"
+  destination_dir = "../configs/rocketchat/conf.render/"
+
+  vars = {
+    public_ip_range       = aws_subnet.public-subnet.cidr_block
+    application1_ip_range = aws_subnet.application1-subnet.cidr_block
+    application2_ip_range = aws_subnet.application2-subnet.cidr_block
+    agent1_ip_range       = aws_subnet.agent1-subnet.cidr_block
+    agent2_ip_range       = aws_subnet.agent2-subnet.cidr_block
+    rocketchat_port            = var.rocketchat_port
+  }
+}
+
 # Prometheus
 data "template_file" "prometheus_install" {
   template = file("../scripts/install_prometheus.sh.tpl")

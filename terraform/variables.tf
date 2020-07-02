@@ -405,6 +405,11 @@ variable "gitlab_ip" {
   description = "IP of GitLab Server"
 }
 
+variable "rocketchat_ip" {
+  default     = "10.15.2.16"
+  description = "IP of Rocket Chat Server"
+}
+
 variable "nginx_ip" {
   default     = "10.15.1.100"
   description = "IP of NginX Server"

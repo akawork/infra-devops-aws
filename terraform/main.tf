@@ -12,7 +12,7 @@ provider "aws" {
 # Get AMI ID for instances
 data "aws_ami" "amzn2" {
   most_recent = true
-  owners = ["amazon"]
+  owners      = ["amazon"]
 
   filter {
     name   = "name"
@@ -23,7 +23,7 @@ data "aws_ami" "amzn2" {
 # Get AMI ID for NAT instance
 data "aws_ami" "amzn2_nat" {
   most_recent = true
-  owners = ["amazon"]
+  owners      = ["amazon"]
 
   filter {
     name   = "name"
@@ -143,6 +143,23 @@ module "squid" {
   network_interface   = aws_network_interface.squid.id
   install_script      = data.template_file.squid_install.rendered
   squid_config        = template_dir.squid_config.destination_dir
+  bastion_host        = aws_instance.bastion-server.public_ip
+  bastion_host_key    = var.bastion_key_path
+  bastion_private_key = var.bastion_private_key_path
+  private_key         = var.internal_private_key_path
+  remote_user         = "ec2-user"
+}
+
+module "rocketchat" {
+  source = "./modules/rocketchat"
+
+  ami                 = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
+  instance_type       = "t2.micro"
+  key_pair            = aws_key_pair.internal.id
+  project_name        = var.project_name
+  network_interface   = aws_network_interface.rocketchat.id
+  install_script      = data.template_file.rocketchat_install.rendered
+  rocketchat_config   = template_dir.rocketchat_config.destination_dir
   bastion_host        = aws_instance.bastion-server.public_ip
   bastion_host_key    = var.bastion_key_path
   bastion_private_key = var.bastion_private_key_path

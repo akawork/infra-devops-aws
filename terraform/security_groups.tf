@@ -283,6 +283,48 @@ resource "aws_security_group" "sgsquid" {
   }
 }
 
+
+# RocketChat security group
+resource "aws_security_group" "sgrocketchat" {
+  name        = var.project_name != "" ? "${var.project_name}-RocketChat" : "RocketChat"
+  description = "Securitygroup on RocketChat Server"
+  vpc_id      = aws_vpc.devops.id
+
+  tags = {
+    Name = var.project_name != "" ? "${var.project_name}-RocketChat" : "RocketChat"
+  }
+}
+
+resource "aws_security_group_rule" "access-request-from-bastion-to-rocketchat-ssh-ingress" {
+  security_group_id = aws_security_group.sgrocketchat.id
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = ["${var.bastion_ip}/32"]
+  description       = "Allow SSH access on Bastion Server"
+}
+
+resource "aws_security_group_rule" "access-request-from-nginx-to-rocketchat-ingress" {
+  security_group_id = aws_security_group.sgrocketchat.id
+  type              = "ingress"
+  from_port         = 8080
+  to_port           = 8080
+  protocol          = "tcp"
+  cidr_blocks       = ["${var.nginx_ip}/32"]
+  description       = "Allow access rocketchat service from nginx"
+}
+
+resource "aws_security_group_rule" "internet-access-request-from-rocketchat-egress" {
+  security_group_id = aws_security_group.sgrocketchat.id
+  type              = "egress"
+  from_port         = 0
+  to_port           = 65535
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "Used to download packages"
+}
+
 # Define the security group for Nexus
 resource "aws_security_group" "sgnexus" {
   name        = var.project_name != "" ? "${var.project_name}-Nexus-SG" : "Nexus-SG"

@@ -46,6 +46,18 @@ resource "aws_network_interface" "squid" {
   }
 }
 
+# Define network interface for rocketchat Server
+resource "aws_network_interface" "rocketchat" {
+  subnet_id         = aws_subnet.application-subnet.id
+  private_ips       = [var.rocketchat_ip]
+  security_groups   = [aws_security_group.sgrocketchat.id]
+  source_dest_check = false
+
+  tags = {
+    Name = var.project_name != "" ? "${var.project_name}-RocketChat" : "RocketChat"
+  }
+}
+
 # Define network interface for OpenLDAP Server
 resource "aws_network_interface" "openldap" {
   subnet_id         = aws_subnet.application1-subnet.id

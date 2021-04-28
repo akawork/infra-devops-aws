@@ -276,6 +276,31 @@ module "jira" {
   db_password          = var.jira_password
 }
 
+module "bamboo" {
+  source = "./modules/bamboo"
+
+  ami                  = var.ami_id == null ? data.aws_ami.amzn2.image_id : var.ami_id
+  instance_type        = "t3.medium"
+  key_pair             = aws_key_pair.internal.id
+  project_name         = var.project_name
+  network_interface    = aws_network_interface.bamboo.id
+  install_script       = data.template_file.bamboo_properties.rendered
+  config_file          = template_dir.bamboo_config.destination_dir
+  bastion_public_ip    = aws_instance.bastion-server.public_ip
+  private_key          = var.internal_private_key_path
+  bastion_key          = var.bastion_key_path
+  bastion_private_key  = var.bastion_private_key_path
+  db_security_group    = aws_security_group.sgdb
+  db_subnet_group_name = aws_db_subnet_group.db_subnet_group.id
+  db_storage           = var.bamboo_storage
+  db_engine            = var.bamboo_engine
+  db_engine_version    = var.bamboo_engine_version
+  db_instance_class    = var.bamboo_instance_class
+  db_name              = var.bamboo_db_name
+  db_username          = var.bamboo_username
+  db_password          = var.bamboo_password
+}
+
 module "confluence" {
   source = "./modules/confluence"
 

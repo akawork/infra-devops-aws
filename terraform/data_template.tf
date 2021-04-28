@@ -1,3 +1,4 @@
+
 # SonarQube
 data "template_file" "sonar_properties" {
   template = file("../scripts/install_sonar.sh.tpl")
@@ -41,6 +42,28 @@ resource "template_dir" "jira_config" {
   }
 }
 
+# Bamboo
+data "template_file" "bamboo_properties" {
+  template = file("../scripts/install_bamboo.sh.tpl")
+
+  vars = {
+    bamboo_version = var.bamboo_version
+  }
+}
+
+resource "template_dir" "bamboo_config" {
+  source_dir      = "../configs/bamboo/"
+  destination_dir = "../configs/bamboo/conf.render/"
+
+  vars = {
+    db_endpoint = module.bamboo.db_endpoint
+    db_name     = var.bamboo_db_name
+    db_password = var.bamboo_password
+    db_username = var.bamboo_username
+  }
+}
+
+
 # Confluence
 data "template_file" "confluence_properties" {
   template = file("../scripts/install_confluence.sh.tpl")
@@ -63,6 +86,8 @@ resource "template_dir" "nginx_conf" {
     jira_domain_name       = aws_route53_record.jira.name
     confluence_domain_name = aws_route53_record.confluence.name
     monitor_domain_name    = aws_route53_record.monitor.name
+    bamboo_domain_name     = aws_route53_record.bamboo.name
+    bamboo_ip              = var.bamboo_ip
     monitor_ip             = var.grafana_ip
     jenkins_ip             = var.jenkins_ip
     sonar_ip               = var.sonar_ip

@@ -165,3 +165,16 @@ resource "aws_network_interface" "prometheus" {
     Name = var.project_name != "" ? "${var.project_name}-Prometheus-Server" : "Prometheus-Server"
   }
 }
+
+
+# Define network interface for Bamboo Server
+resource "aws_network_interface" "bamboo" {
+  subnet_id         = aws_subnet.application1-subnet.id
+  private_ips       = [var.bamboo_ip]
+  security_groups   = [aws_security_group.sgbamboo.id]
+  source_dest_check = false
+
+  tags = {
+    Name = var.project_name != "" ? "${var.project_name}-Jira-Server" : "Jira-Server"
+  }
+}

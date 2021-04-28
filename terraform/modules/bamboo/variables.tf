@@ -29,11 +29,6 @@ variable "install_script" {
   description = "Install jenkins script"
 }
 
-variable "config_file" {
-  type        = string
-  description = "Configuration File"
-}
-
 variable "db_identifier" {
   default     = "bamboodb"
   description = "Identifier for your DB"

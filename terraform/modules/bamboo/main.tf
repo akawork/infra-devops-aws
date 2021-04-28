@@ -18,20 +18,7 @@ resource "aws_instance" "bamboo" {
   volume_tags = {
     Name = var.project_name != "" ? "${var.project_name}-Bamboo-Server" : "Bamboo-Server"
   }
-
-  # Copies the dbconfig file to Bamboo instance.
-  provisioner "file" {
-    source      = var.config_file
-    destination = "/tmp/"
-    connection {
-      user                = "ec2-user"
-      host                = aws_instance.bamboo.private_ip
-      private_key         = file(var.private_key)
-      bastion_host        = var.bastion_public_ip
-      bastion_host_key    = file(var.bastion_key)
-      bastion_private_key = file(var.bastion_private_key)
-    }
-  }
+  
 }
 
 # Define Bamboo Database  

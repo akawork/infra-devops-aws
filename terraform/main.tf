@@ -285,7 +285,6 @@ module "bamboo" {
   project_name         = var.project_name
   network_interface    = aws_network_interface.bamboo.id
   install_script       = data.template_file.bamboo_properties.rendered
-  config_file          = template_dir.bamboo_config.destination_dir
   bastion_public_ip    = aws_instance.bastion-server.public_ip
   private_key          = var.internal_private_key_path
   bastion_key          = var.bastion_key_path

@@ -51,19 +51,6 @@ data "template_file" "bamboo_properties" {
   }
 }
 
-resource "template_dir" "bamboo_config" {
-  source_dir      = "../configs/bamboo/"
-  destination_dir = "../configs/bamboo/conf.render/"
-
-  vars = {
-    db_endpoint = module.bamboo.db_endpoint
-    db_name     = var.bamboo_db_name
-    db_password = var.bamboo_password
-    db_username = var.bamboo_username
-  }
-}
-
-
 # Confluence
 data "template_file" "confluence_properties" {
   template = file("../scripts/install_confluence.sh.tpl")

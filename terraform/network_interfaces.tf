@@ -175,6 +175,6 @@ resource "aws_network_interface" "bamboo" {
   source_dest_check = false
 
   tags = {
-    Name = var.project_name != "" ? "${var.project_name}-Jira-Server" : "Jira-Server"
+    Name = var.project_name != "" ? "${var.project_name}-Bamboo-Server" : "Bamboo-Server"
   }
 }

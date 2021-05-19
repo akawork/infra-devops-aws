@@ -796,3 +796,58 @@ resource "aws_security_group" "sgdb" {
   }
 }
 
+# Define the security group for Bamboo
+resource "aws_security_group" "sgbamboo" {
+  name        = var.project_name != "" ? "${var.project_name}-Bamboo-SG" : "Bamboo-SG"
+  description = "Allow incoming HTTP connections & SSH access"
+  vpc_id      = aws_vpc.devops.id
+
+  tags = {
+    Name = var.project_name != "" ? "${var.project_name}-Bamboo-Server-SG" : "Bamboo-Server-SG"
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = [
+      var.public_subnet_cidr
+    ]
+  }
+
+  ingress {
+    from_port   = 8085
+    to_port     = 8085
+    protocol    = "tcp"
+    cidr_blocks = [
+      var.public_subnet_cidr
+    ]
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["${var.bastion_ip}/32"]
+  }
+
+  egress {
+    from_port = 5432
+    to_port   = 5432
+    protocol  = "tcp"
+    cidr_blocks = [
+      var.private1_subnet_cidr,
+      var.private2_subnet_cidr
+    ]
+    description = "Allow DB connection"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Used to download packages"
+  }
+}
+

@@ -12,23 +12,23 @@ variable "project_name" {
 # Region variable
 variable "region" {
   description = "Region for the the system"
-  default     = "us-east-2"
+  default     = "us-west-1"
 }
 
 # Define Availability Zone
 
 variable "az_1" {
-  default     = "us-east-2a"
+  default     = "us-west-1a"
   description = "First Availability Zone"
 }
 
 variable "az_2" {
-  default     = "us-east-2b"
+  default     = "us-west-1b"
   description = "Second Availability Zone"
 }
 
 variable "domain_name" {
-  default     = "demo.akawork.io"
+  default     = "demo1.akawork.io"
   description = "Your domain name"
 }
 
@@ -264,6 +264,46 @@ variable "jira_password" {
   default     = "DevOps365"
 }
 
+# Bamboo DB Variables
+variable "bamboo_storage" {
+  default     = "20"
+  description = "Storage size in GB"
+}
+
+variable "bamboo_engine" {
+  default     = "postgres"
+  description = "Engine type, example values mysql, postgres"
+}
+
+variable "bamboo_engine_version" {
+  description = "Engine version"
+
+  default = {
+    mysql    = "5.7.21"
+    postgres = "10.16"
+  }
+}
+
+variable "bamboo_instance_class" {
+  default     = "db.t3.micro"
+  description = "Instance class"
+}
+
+variable "bamboo_db_name" {
+  default     = "bamboo"
+  description = "Database name"
+}
+
+variable "bamboo_username" {
+  default     = "bamboouser"
+  description = "User name"
+}
+
+variable "bamboo_password" {
+  description = "Please enter password for jira DB"
+  default     = "DevOps365"
+}
+
 ## Confluence
 
 variable "confluence_identifier" {
@@ -344,6 +384,11 @@ variable "grafana_version" {
   description = "Version of Grafana. https://grafana.com/grafana/download"
 }
 
+variable "bamboo_version" {
+  default     = "atlassian-bamboo-7.2.3"
+  description = "Version of Bamboo. https://www.atlassian.com/software/bamboo/download"
+}
+
 ######################################################
 ##               Default Squid Config               ##
 ######################################################
@@ -378,6 +423,11 @@ variable "openldap_ip" {
 variable "jira_ip" {
   default     = "10.15.2.10"
   description = "IP of Jira Server"
+}
+
+variable "bamboo_ip" {
+  default     = "10.15.2.16"
+  description = "IP of Bamboo Server"
 }
 
 variable "confluence_ip" {
